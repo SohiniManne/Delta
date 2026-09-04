@@ -6,7 +6,10 @@ export class WatchlistService {
   private storageFilePath: string;
 
   constructor() {
-    this.storageFilePath = path.join(process.cwd(), 'watchlists_db.json');
+    const baseDir = fs.existsSync(path.join(process.cwd(), 'backend'))
+      ? path.join(process.cwd(), 'backend')
+      : process.cwd();
+    this.storageFilePath = path.join(baseDir, 'watchlists_db.json');
     this.loadFromDisk();
     this.seedDefaultWatchlist();
   }

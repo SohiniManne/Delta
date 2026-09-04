@@ -8,12 +8,43 @@ import {
   ConfidenceLevel,
 } from '../types/market.js';
 import { marketDataService } from './marketDataService.js';
+import { aiNarratorService } from './aiNarratorService.js';
 
 export class DiffEngine {
   /**
-   * Computes structured diff between base snapshot and target snapshot.
+   * Computes structured diff between base snapshot and target snapshot,
+   * asynchronously enhancing takeaways with AI Diff Narrator (Gemini) when available.
    */
-  public computeDiff(
+  public async computeDiff(
+    baseSnapshot: WatchlistSnapshot,
+    targetSnapshot: WatchlistSnapshot,
+    isColdStart = false
+  ): Promise<WatchlistDiffReport> {
+    const report = this.computeDiffSync(baseSnapshot, targetSnapshot, isColdStart);
+
+    // Asynchronously enhance diff takeaways with AI Narrator (Gemini)
+    try {
+      const enhancedDiffs = await aiNarratorService.enhanceDiffsWithAi(report.diffs);
+      report.diffs = enhancedDiffs;
+
+      // Update top gainer/loser/mostActive references to point to enhanced objects
+      const sortedByGain = [...enhancedDiffs].sort((a, b) => b.percentDelta - a.percentDelta);
+      report.topGainer = sortedByGain.length > 0 && sortedByGain[0].percentDelta > 0 ? sortedByGain[0] : null;
+      report.topLoser = sortedByGain.length > 0 && sortedByGain[sortedByGain.length - 1].percentDelta < 0
+        ? sortedByGain[sortedByGain.length - 1]
+        : null;
+      report.mostActive = [...enhancedDiffs].sort((a, b) => b.volumeRatio - a.volumeRatio)[0] || null;
+    } catch {
+      // Graceful fallback to sync templated report
+    }
+
+    return report;
+  }
+
+  /**
+   * Synchronous pure calculation of structured diff report with deterministic templated takeaways.
+   */
+  public computeDiffSync(
     baseSnapshot: WatchlistSnapshot,
     targetSnapshot: WatchlistSnapshot,
     isColdStart = false
@@ -90,8 +121,8 @@ export class DiffEngine {
         target.confidence.isDivergent
       );
 
-      // Natural language dynamic takeaway synthesis
-      const keyTakeaway = this.generateKeyTakeaway(
+      // Natural language dynamic takeaway synthesis (templated baseline)
+      const templatedTakeaway = this.generateKeyTakeaway(
         symbol,
         percentDelta,
         priceDelta,
@@ -127,8 +158,12 @@ export class DiffEngine {
         newCatalysts,
         priorityScore,
         severity,
-        keyTakeaway,
+        keyTakeaway: templatedTakeaway,
+        templatedTakeaway,
+        isAiNarrated: false,
         targetFreshness: target.freshness,
+        dataAgeMs: target.dataAgeMs,
+        confidence: target.confidence,
         isDegraded,
         confidenceNote,
         sparkline: target.sparkline || [],
@@ -187,7 +222,7 @@ export class DiffEngine {
       coldStart: {
         isColdStart,
         message: coldStartMessage,
-        fallbackBaselineUsed: isColdStart ? 'TODAY_OPEN' : 'NONE',
+        fallbackBaselineUsed: isColdStart ? baseSnapshot.baselineType as any : 'NONE',
       },
       dataQualitySummary: {
         staleCount,

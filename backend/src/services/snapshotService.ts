@@ -14,7 +14,10 @@ export class SnapshotService {
   private storageFilePath: string;
 
   constructor() {
-    this.storageFilePath = path.join(process.cwd(), 'snapshots_db.json');
+    const baseDir = fs.existsSync(path.join(process.cwd(), 'backend'))
+      ? path.join(process.cwd(), 'backend')
+      : process.cwd();
+    this.storageFilePath = path.join(baseDir, 'snapshots_db.json');
     this.loadFromDisk();
     this.seedDefaultHistoricalCheckpoints();
   }

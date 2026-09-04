@@ -14,4 +14,10 @@ export const config = {
   divergence: {
     warningThresholdPercent: 0.30, // > 0.30% divergence triggers warning and lower confidence
   },
+  // AI Diff Narrator Configuration
+  gemini: {
+    apiKey: process.env.GEMINI_API_KEY || process.env.GOOGLE_GENAI_API_KEY || '',
+    model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+    timeoutMs: parseInt(process.env.GEMINI_TIMEOUT_MS || '3000', 10), // Strict 3s timeout
+  },
 };

@@ -8,7 +8,7 @@ import { WatchlistSnapshot } from '../types/market.js';
 const router = Router();
 
 // GET /api/diff/last-seen - Structured diff against last-seen snapshot (or cold-start Open)
-router.get('/last-seen', (req: Request, res: Response) => {
+router.get('/last-seen', async (req: Request, res: Response) => {
   const userId = (req.query.userId as string) || 'default_user';
   const symbols = watchlistService.getWatchlist(userId);
 
@@ -27,12 +27,12 @@ router.get('/last-seen', (req: Request, res: Response) => {
   };
 
   // 3. Compute structured diff
-  const report = diffEngine.computeDiff(baseSnapshot, targetSnapshot, isColdStart);
+  const report = await diffEngine.computeDiff(baseSnapshot, targetSnapshot, isColdStart);
   res.json(report);
 });
 
 // GET /api/diff/compare - Compare any two arbitrary snapshots
-router.get('/compare', (req: Request, res: Response) => {
+router.get('/compare', async (req: Request, res: Response) => {
   const userId = (req.query.userId as string) || 'default_user';
   const baseId = req.query.baseId as string;
   const targetId = (req.query.targetId as string) || 'live';
@@ -46,8 +46,15 @@ router.get('/compare', (req: Request, res: Response) => {
 
   // Retrieve base
   let baseSnapshot: WatchlistSnapshot | null = null;
-  if (baseId.startsWith('snap-synthetic-open')) {
-    baseSnapshot = snapshotService.getSyntheticColdStartBaseline(symbols, userId);
+  const upperBase = baseId.toUpperCase();
+
+  if (upperBase === 'LAST_SEEN' || upperBase === 'LAST-SEEN' || upperBase === 'LAST_VISIT') {
+    const { snapshot } = snapshotService.getLastSeenOrColdStartBaseline(symbols, userId);
+    baseSnapshot = snapshot;
+  } else if (upperBase === 'TODAY_OPEN' || upperBase === 'TODAY-OPEN' || baseId.startsWith('snap-synthetic-open')) {
+    baseSnapshot = snapshotService.getSyntheticColdStartBaseline(symbols, userId, 'TODAY_OPEN');
+  } else if (upperBase === 'PREVIOUS_CLOSE' || upperBase === 'YESTERDAY_CLOSE' || upperBase === 'YESTERDAY-CLOSE' || baseId === 'snap-yesterday-close') {
+    baseSnapshot = snapshotService.getSnapshotById('snap-yesterday-close') || snapshotService.getSyntheticColdStartBaseline(symbols, userId, 'PREVIOUS_CLOSE');
   } else {
     baseSnapshot = snapshotService.getSnapshotById(baseId);
   }
@@ -78,19 +85,19 @@ router.get('/compare', (req: Request, res: Response) => {
     return;
   }
 
-  const report = diffEngine.computeDiff(baseSnapshot, targetSnapshot, false);
+  const report = await diffEngine.computeDiff(baseSnapshot, targetSnapshot, false);
   res.json(report);
 });
 
 // POST /api/diff/acknowledge - "Catch Up / Mark Seen" action
-router.post('/acknowledge', (req: Request, res: Response) => {
+router.post('/acknowledge', async (req: Request, res: Response) => {
   const { userId = 'default_user' } = req.body;
   const symbols = watchlistService.getWatchlist(userId);
 
   const newSnapshot = snapshotService.acknowledgeCurrentState(symbols, userId);
 
   // Return fresh zero-delta report
-  const report = diffEngine.computeDiff(newSnapshot, newSnapshot, false);
+  const report = await diffEngine.computeDiff(newSnapshot, newSnapshot, false);
   res.json({
     message: 'Watchlist acknowledged and updated to latest checkpoint',
     snapshot: newSnapshot,

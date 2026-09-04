@@ -8,5 +8,14 @@
     "AMD",
     "PLTR",
     "AMZN"
+  ],
+  "crypto_whale": [
+    "GOOGL",
+    "META",
+    "NVDA",
+    "AAPL",
+    "TSLA",
+    "BTC",
+    "MSFT"
   ]
 }

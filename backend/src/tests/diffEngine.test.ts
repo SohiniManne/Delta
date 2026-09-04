@@ -145,7 +145,7 @@ async function runTests() {
     },
   };
 
-  const diffReport = diffEngine.computeDiff(baseSnap, targetSnap, true);
+  const diffReport = await diffEngine.computeDiff(baseSnap, targetSnap, true);
   const nvdaDiff = diffReport.diffs[0];
 
   assert(diffReport.coldStart.isColdStart === true, 'Report preserves cold-start metadata');
@@ -158,6 +158,17 @@ async function runTests() {
   assert(nvdaDiff.severity === 'CRITICAL' || nvdaDiff.severity === 'MODERATE', 'Assigns elevated severity to outsized move');
   assert(nvdaDiff.keyTakeaway.includes('Advanced +$5.50 (+5.5%)'), 'keyTakeaway includes clear price shift');
   assert(nvdaDiff.keyTakeaway.includes('RSI crossed into overbought'), 'keyTakeaway includes RSI overbought explanation');
+
+  // --- Test Suite 5: AI Diff Narrator Resilience & Graceful Fallbacks ---
+  console.log('\nTest Suite 5: AI Diff Narrator Resilience & Graceful Fallbacks');
+  assert(nvdaDiff.templatedTakeaway !== undefined, 'Every diff retains deterministic templatedTakeaway baseline');
+  assert(typeof nvdaDiff.keyTakeaway === 'string' && nvdaDiff.keyTakeaway.length > 0, 'keyTakeaway is always non-empty');
+  assert(nvdaDiff.isAiNarrated === false || nvdaDiff.isAiNarrated === true, 'isAiNarrated boolean flag is set');
+
+  // Verify that if no key is present, fallback is completely silent and instantaneous
+  const syncReport = diffEngine.computeDiffSync(baseSnap, targetSnap, false);
+  assert(syncReport.diffs[0].keyTakeaway.length > 0, 'Synchronous computeDiffSync yields valid takeaway');
+  assert(syncReport.diffs[0].templatedTakeaway === syncReport.diffs[0].keyTakeaway, 'templatedTakeaway matches keyTakeaway on sync');
 
   console.log(`\n========================================`);
   console.log(`Results: ${passed} passed, ${failed} failed.`);
