@@ -1,0 +1,125 @@
+export type FreshnessLevel = 'REALTIME' | 'DELAYED' | 'STALE';
+export type ConfidenceLevel = 'HIGH' | 'MEDIUM' | 'LOW';
+export type CatalystImpact = 'BULLISH' | 'BEARISH' | 'NEUTRAL';
+export type DiffSeverity = 'CRITICAL' | 'MODERATE' | 'LOW' | 'UNCHANGED';
+export type BaselineType = 'USER_COMMIT' | 'AUTO_SESSION' | 'TODAY_OPEN' | 'PREVIOUS_CLOSE';
+
+export interface DataSourceConfidence {
+  level: ConfidenceLevel;
+  isDivergent: boolean; // True if primary and secondary providers disagree (>0.30% delta)
+  divergencePercent?: number; // Spread between feeds (e.g. 0.85%)
+  primaryProvider: string; // e.g., "Finnhub Pro Live", "Deterministic Sim"
+  secondaryProvider?: string; // e.g., "Yahoo Backup"
+  asOf: number; // Unix timestamp (ms) when quote was fetched
+}
+
+export interface CatalystEvent {
+  id: string;
+  symbol: string;
+  timestamp: number;
+  headline: string;
+  source: string;
+  impact: CatalystImpact;
+  summary: string;
+  category: 'EARNINGS' | 'MACRO' | 'PRODUCT' | 'ANALYST' | 'LEGAL' | 'GENERAL';
+}
+
+export interface TickerState {
+  symbol: string;
+  name: string;
+  price: number;
+  open: number;
+  high: number;
+  low: number;
+  volume: number;
+  avgVolume: number;
+  peRatio?: number;
+  marketCap: number;
+  rsi14: number;
+  macd: { value: number; signal: number; histogram: number };
+  sparkline: number[];
+  activeCatalysts: CatalystEvent[];
+
+  // --- Data Freshness & Source Confidence ---
+  freshness: FreshnessLevel; // REALTIME (<30s), DELAYED (30s-15m), STALE (>15m)
+  dataAgeMs: number;
+  confidence: DataSourceConfidence;
+}
+
+export interface WatchlistSnapshot {
+  id: string;
+  userId: string;
+  name: string; // e.g. "Today's Market Open (09:30 AM)", "Pre-CPI Release", "Session Close"
+  timestamp: number;
+  isSyntheticColdStart?: boolean; // Set to true if generated from fallback baseline
+  baselineType: BaselineType;
+  tickers: Record<string, TickerState>;
+}
+
+export interface TickerDiff {
+  symbol: string;
+  name: string;
+  basePrice: number;
+  targetPrice: number;
+  priceDelta: number;
+  percentDelta: number;
+  volumeRatio: number; // target volume vs base or daily avg
+  indicatorShifts: {
+    rsiChange: number;
+    rsiStatus: 'NORMAL' | 'OVERBOUGHT_ENTERED' | 'OVERSOLD_ENTERED';
+    macdCross: 'BULLISH_CROSS' | 'BEARISH_CROSS' | 'NONE';
+  };
+  newCatalysts: CatalystEvent[];
+  priorityScore: number; // 0 to 100 attention score
+  severity: DiffSeverity;
+  keyTakeaway: string;
+
+  // Data Quality & Precision Context for Frontend Visual Degradation
+  targetFreshness: FreshnessLevel;
+  isDegraded: boolean;
+  confidenceNote?: string;
+  sparkline: number[];
+}
+
+export interface WatchlistDiffReport {
+  baseSnapshot: {
+    id: string;
+    name: string;
+    timestamp: number;
+    baselineType: BaselineType;
+    isSyntheticColdStart: boolean;
+  };
+  targetSnapshot: {
+    id: string;
+    name: string;
+    timestamp: number;
+  };
+  portfolioDeltaPercent: number;
+  topGainer: TickerDiff | null;
+  topLoser: TickerDiff | null;
+  mostActive: TickerDiff | null;
+  diffs: TickerDiff[];
+  totalNewCatalysts: number;
+  generatedAt: number;
+
+  // Cold-Start Metadata
+  coldStart: {
+    isColdStart: boolean;
+    message?: string;
+    fallbackBaselineUsed: 'TODAY_OPEN' | 'PREVIOUS_CLOSE' | 'NONE';
+  };
+
+  // Overall Feed Quality Status
+  dataQualitySummary: {
+    staleCount: number;
+    divergenceCount: number;
+    overallConfidence: ConfidenceLevel | 'DEGRADED';
+  };
+}
+
+export interface Watchlist {
+  userId: string;
+  symbols: string[];
+  lastSeenSnapshotId: string | null;
+  updatedAt: number;
+}

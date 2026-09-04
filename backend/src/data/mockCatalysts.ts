@@ -1,0 +1,98 @@
+import { CatalystEvent } from '../types/market.js';
+
+const now = Date.now();
+const minutesAgo = (m: number) => now - m * 60 * 1000;
+const hoursAgo = (h: number) => now - h * 60 * 60 * 1000;
+
+export const INITIAL_MOCK_CATALYSTS: CatalystEvent[] = [
+  {
+    id: 'cat-nvda-1',
+    symbol: 'NVDA',
+    timestamp: minutesAgo(18),
+    headline: 'NVIDIA Announces Next-Gen Ultra Rubin Architecture Ahead of Schedule',
+    source: 'Bloomberg Tech',
+    impact: 'BULLISH',
+    summary: 'CEO Jensen Huang confirmed hyperscaler pre-orders exceeded supply allocations by 3x for upcoming AI clusters.',
+    category: 'PRODUCT',
+  },
+  {
+    id: 'cat-nvda-2',
+    symbol: 'NVDA',
+    timestamp: hoursAgo(3),
+    headline: 'Goldman Sachs Raises NVDA Price Target to $165 on Data Center Demand',
+    source: 'Goldman Sachs Equity Research',
+    impact: 'BULLISH',
+    summary: 'Analyst highlights accelerating enterprise inference workloads driving multi-year gross margin expansion.',
+    category: 'ANALYST',
+  },
+  {
+    id: 'cat-tsla-1',
+    symbol: 'TSLA',
+    timestamp: minutesAgo(42),
+    headline: 'NHTSA Expands Probe into Full Self-Driving Collision Reports',
+    source: 'Reuters Financial',
+    impact: 'BEARISH',
+    summary: 'Regulators opened inquiries into 44 incidents involving low-visibility conditions. Software patch requested.',
+    category: 'LEGAL',
+  },
+  {
+    id: 'cat-tsla-2',
+    symbol: 'TSLA',
+    timestamp: hoursAgo(5),
+    headline: 'European Gigafactory Reaches 8,000 Model Y Weekly Run Rate',
+    source: 'Electrek',
+    impact: 'BULLISH',
+    summary: 'Berlin plant efficiency ramp exceeds analyst expectations despite regional shipping bottlenecks.',
+    category: 'PRODUCT',
+  },
+  {
+    id: 'cat-aapl-1',
+    symbol: 'AAPL',
+    timestamp: hoursAgo(1.5),
+    headline: 'Apple Intelligence Beta Expands to 12 Additional Languages and Global Regions',
+    source: 'MacRumors Pro',
+    impact: 'BULLISH',
+    summary: 'Early user retention metrics show 40% higher Siri daily engagement following on-device model deployment.',
+    category: 'PRODUCT',
+  },
+  {
+    id: 'cat-btc-1',
+    symbol: 'BTC',
+    timestamp: minutesAgo(5),
+    headline: 'Institutional ETF Inflows Hit Record $890M in Single Trading Session',
+    source: 'CoinDesk Institutional',
+    impact: 'BULLISH',
+    summary: 'Sovereign wealth funds and pension managers increase digital asset reserve allocations.',
+    category: 'MACRO',
+  },
+  {
+    id: 'cat-amd-1',
+    symbol: 'AMD',
+    timestamp: hoursAgo(2),
+    headline: 'AMD Unveils MI350X Accelerator with 288GB HBM3e Memory',
+    source: 'AnandTech',
+    impact: 'BULLISH',
+    summary: 'Benchmark results demonstrate 1.3x price-to-performance advantage over competitor GPUs for LLM training.',
+    category: 'PRODUCT',
+  },
+  {
+    id: 'cat-pltr-1',
+    symbol: 'PLTR',
+    timestamp: minutesAgo(50),
+    headline: 'Palantir Secures $480M Enterprise AI Contract with Global Logistics Consortium',
+    source: 'PR Newswire',
+    impact: 'BULLISH',
+    summary: 'Multi-year AIP platform expansion to orchestrate autonomous container routing across 14 ports.',
+    category: 'PRODUCT',
+  },
+  {
+    id: 'cat-msft-1',
+    symbol: 'MSFT',
+    timestamp: hoursAgo(4),
+    headline: 'Azure AI Cloud Revenue Surges 31% YoY in Enterprise Segment',
+    source: 'Wall Street Journal',
+    impact: 'BULLISH',
+    summary: 'Copilot studio deployments exceed 60,000 enterprise organizations worldwide.',
+    category: 'EARNINGS',
+  }
+];

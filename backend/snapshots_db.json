@@ -1,0 +1,651 @@
+{
+  "snapshots": [
+    {
+      "id": "snap-yesterday-close",
+      "userId": "default_user",
+      "name": "Yesterday's Market Close (04:00 PM)",
+      "timestamp": 1788435918338,
+      "baselineType": "PREVIOUS_CLOSE",
+      "tickers": {
+        "NVDA": {
+          "symbol": "NVDA",
+          "name": "NVIDIA Corporation",
+          "price": 122.63,
+          "open": 122.63,
+          "high": 123.85629999999999,
+          "low": 121.4037,
+          "volume": 48500000,
+          "avgVolume": 48500000,
+          "peRatio": 52.4,
+          "marketCap": 3180000000000,
+          "rsi14": 48,
+          "macd": {
+            "value": 0,
+            "signal": 0,
+            "histogram": 0
+          },
+          "sparkline": [
+            122.63,
+            122.63,
+            122.63
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "NYSE / NASDAQ EOD Final",
+            "asOf": 1788435918338
+          }
+        },
+        "AAPL": {
+          "symbol": "AAPL",
+          "name": "Apple Inc.",
+          "price": 224.68,
+          "open": 224.68,
+          "high": 226.92680000000001,
+          "low": 222.4332,
+          "volume": 54000000,
+          "avgVolume": 54000000,
+          "peRatio": 34.1,
+          "marketCap": 3520000000000,
+          "rsi14": 48,
+          "macd": {
+            "value": 0,
+            "signal": 0,
+            "histogram": 0
+          },
+          "sparkline": [
+            224.68,
+            224.68,
+            224.68
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "NYSE / NASDAQ EOD Final",
+            "asOf": 1788435918338
+          }
+        },
+        "TSLA": {
+          "symbol": "TSLA",
+          "name": "Tesla, Inc.",
+          "price": 214.73,
+          "open": 214.73,
+          "high": 216.8773,
+          "low": 212.5827,
+          "volume": 62000000,
+          "avgVolume": 62000000,
+          "peRatio": 64.8,
+          "marketCap": 678000000000,
+          "rsi14": 48,
+          "macd": {
+            "value": 0,
+            "signal": 0,
+            "histogram": 0
+          },
+          "sparkline": [
+            214.73,
+            214.73,
+            214.73
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "NYSE / NASDAQ EOD Final",
+            "asOf": 1788435918338
+          }
+        },
+        "MSFT": {
+          "symbol": "MSFT",
+          "name": "Microsoft Corporation",
+          "price": 435.37,
+          "open": 435.37,
+          "high": 439.7237,
+          "low": 431.0163,
+          "volume": 21000000,
+          "avgVolume": 21000000,
+          "peRatio": 36.5,
+          "marketCap": 3320000000000,
+          "rsi14": 48,
+          "macd": {
+            "value": 0,
+            "signal": 0,
+            "histogram": 0
+          },
+          "sparkline": [
+            435.37,
+            435.37,
+            435.37
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "NYSE / NASDAQ EOD Final",
+            "asOf": 1788435918338
+          }
+        },
+        "BTC": {
+          "symbol": "BTC",
+          "name": "Bitcoin (USD)",
+          "price": 57327,
+          "open": 57327,
+          "high": 57900.270000000004,
+          "low": 56753.729999999996,
+          "volume": 28000000000,
+          "avgVolume": 28000000000,
+          "marketCap": 1210000000000,
+          "rsi14": 48,
+          "macd": {
+            "value": 0,
+            "signal": 0,
+            "histogram": 0
+          },
+          "sparkline": [
+            57327,
+            57327,
+            57327
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "NYSE / NASDAQ EOD Final",
+            "asOf": 1788435918338
+          }
+        },
+        "AMD": {
+          "symbol": "AMD",
+          "name": "Advanced Micro Devices",
+          "price": 145.98,
+          "open": 145.98,
+          "high": 147.4398,
+          "low": 144.5202,
+          "volume": 38000000,
+          "avgVolume": 38000000,
+          "peRatio": 42.1,
+          "marketCap": 250000000000,
+          "rsi14": 48,
+          "macd": {
+            "value": 0,
+            "signal": 0,
+            "histogram": 0
+          },
+          "sparkline": [
+            145.98,
+            145.98,
+            145.98
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "NYSE / NASDAQ EOD Final",
+            "asOf": 1788435918338
+          }
+        },
+        "AMZN": {
+          "symbol": "AMZN",
+          "name": "Amazon.com, Inc.",
+          "price": 175.82,
+          "open": 175.82,
+          "high": 177.57819999999998,
+          "low": 174.0618,
+          "volume": 35000000,
+          "avgVolume": 35000000,
+          "peRatio": 41.2,
+          "marketCap": 1850000000000,
+          "rsi14": 48,
+          "macd": {
+            "value": 0,
+            "signal": 0,
+            "histogram": 0
+          },
+          "sparkline": [
+            175.82,
+            175.82,
+            175.82
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "NYSE / NASDAQ EOD Final",
+            "asOf": 1788435918338
+          }
+        },
+        "GOOGL": {
+          "symbol": "GOOGL",
+          "name": "Alphabet Inc.",
+          "price": 162.82,
+          "open": 162.82,
+          "high": 164.44819999999999,
+          "low": 161.1918,
+          "volume": 26000000,
+          "avgVolume": 26000000,
+          "peRatio": 24.2,
+          "marketCap": 2090000000000,
+          "rsi14": 48,
+          "macd": {
+            "value": 0,
+            "signal": 0,
+            "histogram": 0
+          },
+          "sparkline": [
+            162.82,
+            162.82,
+            162.82
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "NYSE / NASDAQ EOD Final",
+            "asOf": 1788435918338
+          }
+        },
+        "PLTR": {
+          "symbol": "PLTR",
+          "name": "Palantir Technologies",
+          "price": 30.73,
+          "open": 30.73,
+          "high": 31.037300000000002,
+          "low": 30.4227,
+          "volume": 45000000,
+          "avgVolume": 45000000,
+          "peRatio": 88,
+          "marketCap": 76000000000,
+          "rsi14": 48,
+          "macd": {
+            "value": 0,
+            "signal": 0,
+            "histogram": 0
+          },
+          "sparkline": [
+            30.73,
+            30.73,
+            30.73
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "NYSE / NASDAQ EOD Final",
+            "asOf": 1788435918338
+          }
+        },
+        "META": {
+          "symbol": "META",
+          "name": "Meta Platforms, Inc.",
+          "price": 504.32,
+          "open": 504.32,
+          "high": 509.3632,
+          "low": 499.2768,
+          "volume": 14500000,
+          "avgVolume": 14500000,
+          "peRatio": 27.8,
+          "marketCap": 1330000000000,
+          "rsi14": 48,
+          "macd": {
+            "value": 0,
+            "signal": 0,
+            "histogram": 0
+          },
+          "sparkline": [
+            504.32,
+            504.32,
+            504.32
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "NYSE / NASDAQ EOD Final",
+            "asOf": 1788435918338
+          }
+        }
+      }
+    },
+    {
+      "id": "snap-midday-4h",
+      "userId": "default_user",
+      "name": "Mid-Morning Checkpoint (4h ago)",
+      "timestamp": 1788507918338,
+      "baselineType": "USER_COMMIT",
+      "tickers": {
+        "NVDA": {
+          "symbol": "NVDA",
+          "name": "NVIDIA Corporation",
+          "price": 125.5,
+          "open": 124.5,
+          "high": 127.006,
+          "low": 123.8775,
+          "volume": 19400000,
+          "avgVolume": 48500000,
+          "peRatio": 52.4,
+          "marketCap": 3180000000000,
+          "rsi14": 53.5,
+          "macd": {
+            "value": 0.4,
+            "signal": 0.3,
+            "histogram": 0.1
+          },
+          "sparkline": [
+            124.5,
+            125.5
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "Finnhub Market Stream",
+            "asOf": 1788507918338
+          }
+        },
+        "AAPL": {
+          "symbol": "AAPL",
+          "name": "Apple Inc.",
+          "price": 229.92,
+          "open": 228.1,
+          "high": 232.67904,
+          "low": 226.9595,
+          "volume": 21600000,
+          "avgVolume": 54000000,
+          "peRatio": 34.1,
+          "marketCap": 3520000000000,
+          "rsi14": 53.5,
+          "macd": {
+            "value": 0.4,
+            "signal": 0.3,
+            "histogram": 0.1
+          },
+          "sparkline": [
+            228.1,
+            229.92
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "Finnhub Market Stream",
+            "asOf": 1788507918338
+          }
+        },
+        "TSLA": {
+          "symbol": "TSLA",
+          "name": "Tesla, Inc.",
+          "price": 219.74,
+          "open": 218,
+          "high": 222.37688,
+          "low": 216.91,
+          "volume": 24800000,
+          "avgVolume": 62000000,
+          "peRatio": 64.8,
+          "marketCap": 678000000000,
+          "rsi14": 53.5,
+          "macd": {
+            "value": 0.4,
+            "signal": 0.3,
+            "histogram": 0.1
+          },
+          "sparkline": [
+            218,
+            219.74
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "Finnhub Market Stream",
+            "asOf": 1788507918338
+          }
+        },
+        "MSFT": {
+          "symbol": "MSFT",
+          "name": "Microsoft Corporation",
+          "price": 445.54,
+          "open": 442,
+          "high": 450.88648,
+          "low": 439.79,
+          "volume": 8400000,
+          "avgVolume": 21000000,
+          "peRatio": 36.5,
+          "marketCap": 3320000000000,
+          "rsi14": 53.5,
+          "macd": {
+            "value": 0.4,
+            "signal": 0.3,
+            "histogram": 0.1
+          },
+          "sparkline": [
+            442,
+            445.54
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "Finnhub Market Stream",
+            "asOf": 1788507918338
+          }
+        },
+        "BTC": {
+          "symbol": "BTC",
+          "name": "Bitcoin (USD)",
+          "price": 58665.6,
+          "open": 58200,
+          "high": 59369.5872,
+          "low": 57909,
+          "volume": 11200000000,
+          "avgVolume": 28000000000,
+          "marketCap": 1210000000000,
+          "rsi14": 53.5,
+          "macd": {
+            "value": 0.4,
+            "signal": 0.3,
+            "histogram": 0.1
+          },
+          "sparkline": [
+            58200,
+            58665.6
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "Finnhub Market Stream",
+            "asOf": 1788507918338
+          }
+        },
+        "AMD": {
+          "symbol": "AMD",
+          "name": "Advanced Micro Devices",
+          "price": 149.39,
+          "open": 148.2,
+          "high": 151.18267999999998,
+          "low": 147.45899999999997,
+          "volume": 15200000,
+          "avgVolume": 38000000,
+          "peRatio": 42.1,
+          "marketCap": 250000000000,
+          "rsi14": 53.5,
+          "macd": {
+            "value": 0.4,
+            "signal": 0.3,
+            "histogram": 0.1
+          },
+          "sparkline": [
+            148.2,
+            149.39
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "Finnhub Market Stream",
+            "asOf": 1788507918338
+          }
+        },
+        "AMZN": {
+          "symbol": "AMZN",
+          "name": "Amazon.com, Inc.",
+          "price": 179.93,
+          "open": 178.5,
+          "high": 182.08916000000002,
+          "low": 177.6075,
+          "volume": 14000000,
+          "avgVolume": 35000000,
+          "peRatio": 41.2,
+          "marketCap": 1850000000000,
+          "rsi14": 53.5,
+          "macd": {
+            "value": 0.4,
+            "signal": 0.3,
+            "histogram": 0.1
+          },
+          "sparkline": [
+            178.5,
+            179.93
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "Finnhub Market Stream",
+            "asOf": 1788507918338
+          }
+        },
+        "GOOGL": {
+          "symbol": "GOOGL",
+          "name": "Alphabet Inc.",
+          "price": 166.62,
+          "open": 165.3,
+          "high": 168.61944,
+          "low": 164.4735,
+          "volume": 10400000,
+          "avgVolume": 26000000,
+          "peRatio": 24.2,
+          "marketCap": 2090000000000,
+          "rsi14": 53.5,
+          "macd": {
+            "value": 0.4,
+            "signal": 0.3,
+            "histogram": 0.1
+          },
+          "sparkline": [
+            165.3,
+            166.62
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "Finnhub Market Stream",
+            "asOf": 1788507918338
+          }
+        },
+        "PLTR": {
+          "symbol": "PLTR",
+          "name": "Palantir Technologies",
+          "price": 31.45,
+          "open": 31.2,
+          "high": 31.8274,
+          "low": 31.044,
+          "volume": 18000000,
+          "avgVolume": 45000000,
+          "peRatio": 88,
+          "marketCap": 76000000000,
+          "rsi14": 53.5,
+          "macd": {
+            "value": 0.4,
+            "signal": 0.3,
+            "histogram": 0.1
+          },
+          "sparkline": [
+            31.2,
+            31.45
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "Finnhub Market Stream",
+            "asOf": 1788507918338
+          }
+        },
+        "META": {
+          "symbol": "META",
+          "name": "Meta Platforms, Inc.",
+          "price": 516.1,
+          "open": 512,
+          "high": 522.2932000000001,
+          "low": 509.44,
+          "volume": 5800000,
+          "avgVolume": 14500000,
+          "peRatio": 27.8,
+          "marketCap": 1330000000000,
+          "rsi14": 53.5,
+          "macd": {
+            "value": 0.4,
+            "signal": 0.3,
+            "histogram": 0.1
+          },
+          "sparkline": [
+            512,
+            516.1
+          ],
+          "activeCatalysts": [],
+          "freshness": "REALTIME",
+          "dataAgeMs": 0,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "primaryProvider": "Finnhub Market Stream",
+            "asOf": 1788507918338
+          }
+        }
+      }
+    }
+  ],
+  "userLastSeen": {}
+}

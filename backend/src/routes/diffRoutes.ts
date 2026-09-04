@@ -1,0 +1,101 @@
+import { Router, Request, Response } from 'express';
+import { diffEngine } from '../services/diffEngine.js';
+import { snapshotService } from '../services/snapshotService.js';
+import { watchlistService } from '../services/watchlistService.js';
+import { marketDataService } from '../services/marketDataService.js';
+import { WatchlistSnapshot } from '../types/market.js';
+
+const router = Router();
+
+// GET /api/diff/last-seen - Structured diff against last-seen snapshot (or cold-start Open)
+router.get('/last-seen', (req: Request, res: Response) => {
+  const userId = (req.query.userId as string) || 'default_user';
+  const symbols = watchlistService.getWatchlist(userId);
+
+  // 1. Get base snapshot (either saved last-seen or synthesized Today's Market Open)
+  const { snapshot: baseSnapshot, isColdStart } = snapshotService.getLastSeenOrColdStartBaseline(symbols, userId);
+
+  // 2. Build live target snapshot
+  const liveTickers = marketDataService.getAllTickerStates(symbols);
+  const targetSnapshot: WatchlistSnapshot = {
+    id: 'live',
+    userId,
+    name: 'Current Live State',
+    timestamp: Date.now(),
+    baselineType: 'USER_COMMIT',
+    tickers: liveTickers,
+  };
+
+  // 3. Compute structured diff
+  const report = diffEngine.computeDiff(baseSnapshot, targetSnapshot, isColdStart);
+  res.json(report);
+});
+
+// GET /api/diff/compare - Compare any two arbitrary snapshots
+router.get('/compare', (req: Request, res: Response) => {
+  const userId = (req.query.userId as string) || 'default_user';
+  const baseId = req.query.baseId as string;
+  const targetId = (req.query.targetId as string) || 'live';
+
+  if (!baseId) {
+    res.status(400).json({ error: 'baseId query param is required' });
+    return;
+  }
+
+  const symbols = watchlistService.getWatchlist(userId);
+
+  // Retrieve base
+  let baseSnapshot: WatchlistSnapshot | null = null;
+  if (baseId.startsWith('snap-synthetic-open')) {
+    baseSnapshot = snapshotService.getSyntheticColdStartBaseline(symbols, userId);
+  } else {
+    baseSnapshot = snapshotService.getSnapshotById(baseId);
+  }
+
+  if (!baseSnapshot) {
+    res.status(404).json({ error: `Base snapshot '${baseId}' not found` });
+    return;
+  }
+
+  // Retrieve or synthesize target
+  let targetSnapshot: WatchlistSnapshot | null = null;
+  if (targetId === 'live') {
+    const liveTickers = marketDataService.getAllTickerStates(symbols);
+    targetSnapshot = {
+      id: 'live',
+      userId,
+      name: 'Current Live State',
+      timestamp: Date.now(),
+      baselineType: 'USER_COMMIT',
+      tickers: liveTickers,
+    };
+  } else {
+    targetSnapshot = snapshotService.getSnapshotById(targetId);
+  }
+
+  if (!targetSnapshot) {
+    res.status(404).json({ error: `Target snapshot '${targetId}' not found` });
+    return;
+  }
+
+  const report = diffEngine.computeDiff(baseSnapshot, targetSnapshot, false);
+  res.json(report);
+});
+
+// POST /api/diff/acknowledge - "Catch Up / Mark Seen" action
+router.post('/acknowledge', (req: Request, res: Response) => {
+  const { userId = 'default_user' } = req.body;
+  const symbols = watchlistService.getWatchlist(userId);
+
+  const newSnapshot = snapshotService.acknowledgeCurrentState(symbols, userId);
+
+  // Return fresh zero-delta report
+  const report = diffEngine.computeDiff(newSnapshot, newSnapshot, false);
+  res.json({
+    message: 'Watchlist acknowledged and updated to latest checkpoint',
+    snapshot: newSnapshot,
+    report,
+  });
+});
+
+export default router;
