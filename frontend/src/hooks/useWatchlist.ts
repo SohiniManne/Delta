@@ -16,6 +16,11 @@ export function useWatchlist(userId: string) {
   const [symbols, setSymbols] = useState<string[]>([]);
   const [tickers, setTickers] = useState<Record<string, TickerState>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isRetrying, setIsRetrying] = useState(false);
+  const [isServerWakingUp, setIsServerWakingUp] = useState(false);
+  const [retryAttempt, setRetryAttempt] = useState(0);
+  const [retryCountdown, setRetryCountdown] = useState(8);
+  const [hasSuccessfullyLoaded, setHasSuccessfullyLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isRemoving, setIsRemoving] = useState<string | null>(null);
 
@@ -23,6 +28,7 @@ export function useWatchlist(userId: string) {
   const loadAllWatchlists = useCallback(async (preferredId?: string) => {
     if (!userId) return;
     try {
+      setIsRetrying(true);
       setError(null);
       const data = await fetchAllWatchlists(userId);
       const list = data.watchlists || [];
@@ -41,17 +47,45 @@ export function useWatchlist(userId: string) {
         setSymbols([]);
         setTickers({});
       }
+
+      setHasSuccessfullyLoaded(true);
+      setIsServerWakingUp(false);
+      setRetryAttempt(0);
     } catch (err: any) {
-      setError(err.message || 'Failed to load watchlists');
+      if (!hasSuccessfullyLoaded && watchlists.length === 0) {
+        setIsServerWakingUp(true);
+        setRetryAttempt((prev) => prev + 1);
+        setRetryCountdown(8);
+      } else {
+        setError(err.message || 'Failed to load watchlists');
+      }
     } finally {
       setIsLoading(false);
+      setIsRetrying(false);
     }
-  }, [userId, activeWatchlistId]);
+  }, [userId, activeWatchlistId, hasSuccessfullyLoaded, watchlists.length]);
 
   // Load when userId changes
   useEffect(() => {
     loadAllWatchlists();
   }, [userId]);
+
+  // Automatic retry countdown timer while server is waking up
+  useEffect(() => {
+    if (!isServerWakingUp || hasSuccessfullyLoaded) return;
+
+    const timer = setInterval(() => {
+      setRetryCountdown((prev) => {
+        if (prev <= 1) {
+          loadAllWatchlists();
+          return 8;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [isServerWakingUp, hasSuccessfullyLoaded, loadAllWatchlists]);
 
   // Load specific active watchlist data
   const loadActiveWatchlist = useCallback(async () => {
@@ -158,6 +192,10 @@ export function useWatchlist(userId: string) {
     symbols,
     tickers,
     isLoading,
+    isRetrying,
+    isServerWakingUp,
+    retryAttempt,
+    retryCountdown,
     error,
     isRemoving,
     switchWatchlist,
@@ -166,6 +204,7 @@ export function useWatchlist(userId: string) {
     deleteCurrentWatchlist,
     loadWatchlist: loadActiveWatchlist,
     loadAllWatchlists,
+    retryNow: () => loadAllWatchlists(),
     addSymbol,
     removeSymbol,
   };

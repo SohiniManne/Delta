@@ -10,6 +10,7 @@ import { TimeTravelBar } from './components/diff/TimeTravelBar';
 import { WatchlistTable } from './components/watchlist/WatchlistTable';
 import { AddStockModal } from './components/watchlist/AddStockModal';
 import { UserIdentityModal } from './components/layout/UserIdentityModal';
+import { ServerWakeupScreen } from './components/common/ServerWakeupScreen';
 
 const DEFAULT_USER_ID = 'alice_quant';
 
@@ -29,6 +30,10 @@ export function App() {
     symbols,
     tickers,
     isLoading: isWatchlistLoading,
+    isRetrying: isWatchlistRetrying,
+    isServerWakingUp,
+    retryAttempt,
+    retryCountdown,
     error: watchlistError,
     isRemoving,
     switchWatchlist,
@@ -36,6 +41,7 @@ export function App() {
     renameCurrentWatchlist,
     deleteCurrentWatchlist,
     loadWatchlist,
+    retryNow,
     addSymbol,
     removeSymbol,
   } = useWatchlist(userId);
@@ -110,33 +116,43 @@ export function App() {
       {/* 2. Interactive Demo Simulation Controls */}
       <SimulationControls onRefresh={handleRefreshAll} />
 
-      {/* Errors Banner */}
-      {(watchlistError || diffError) && (
+      {/* Errors Banner (Only shown once initial connection succeeds) */}
+      {!isServerWakingUp && (watchlistError || diffError) && (
         <div className="modal-error-banner" style={{ margin: '0 16px 12px 16px' }}>
           {watchlistError || diffError}
         </div>
       )}
 
-      {/* 3-Column Institutional Terminal Layout */}
-      <div className="terminal-workspace-layout">
-        {/* Column 1: Left Sidebar for Multi-Watchlist Navigation */}
-        <Sidebar
-          watchlists={watchlists}
-          activeWatchlistId={activeWatchlistId}
-          onSelectWatchlist={(id) => switchWatchlist(id)}
-          onCreateWatchlist={async (name) => {
-            const created = await createNewWatchlist(name);
-            await loadDiff(false);
-            return created;
-          }}
-          onRenameWatchlist={renameCurrentWatchlist}
-          onDeleteWatchlist={deleteCurrentWatchlist}
+      {/* Render Server Wakeup / Cold-Start screen if backend is waking up on first load */}
+      {isServerWakingUp && watchlists.length === 0 ? (
+        <ServerWakeupScreen
+          retryAttempt={retryAttempt}
+          retryCountdown={retryCountdown}
+          onRetry={retryNow}
+          isRetrying={isWatchlistRetrying}
+          error={watchlistError}
         />
+      ) : (
+        /* 3-Column Institutional Terminal Layout */
+        <div className="terminal-workspace-layout">
+          {/* Column 1: Left Sidebar for Multi-Watchlist Navigation */}
+          <Sidebar
+            watchlists={watchlists}
+            activeWatchlistId={activeWatchlistId}
+            onSelectWatchlist={(id) => switchWatchlist(id)}
+            onCreateWatchlist={async (name) => {
+              const created = await createNewWatchlist(name);
+              await loadDiff(false);
+              return created;
+            }}
+            onRenameWatchlist={renameCurrentWatchlist}
+            onDeleteWatchlist={deleteCurrentWatchlist}
+          />
 
-        {/* Column 2: Center Workspace (Hero, TimeTravel, Table) */}
-        <main className="terminal-center-column">
-          {/* Active Watchlist Header Banner */}
-          <div className="watchlist-banner-header">
+          {/* Column 2: Center Workspace (Hero, TimeTravel, Table) */}
+          <main className="terminal-center-column">
+            {/* Active Watchlist Header Banner */}
+            <div className="watchlist-banner-header">
             <div className="banner-left">
               <span className="banner-tag">ACTIVE PORTFOLIO</span>
               <h2 className="banner-title">{activeWatchlist?.name || 'Watchlist'}</h2>
@@ -191,6 +207,7 @@ export function App() {
           tickerState={selectedTickerState}
         />
       </div>
+      )}
 
       {/* Add Stock Modal */}
       <AddStockModal
