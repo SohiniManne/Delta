@@ -3,6 +3,10 @@
 
 Delta reimagines the modern market watchlist. Instead of bombarding traders with a chaotic, noisy stream of blinking numbers, Delta models market data as **versioned state snapshots**. When returning to your watchlist, Delta computes an institutional **structured diff** against your last-seen baseline—synthesizing quantitative price shifts, volume surges, technical indicator crossovers, rolling correlation breaks, breaking catalyst events, and live feed quality audits into actionable intelligence.
 
+> [!NOTE]
+> **Live Demo & Server Cold Start**:
+> The live demo is hosted on a free tier and may take up to 60 seconds to wake up on first load. If the backend is waking up, the application displays a friendly connection radar screen that automatically retries until the gateway responds.
+
 ---
 
 ## 🏛️ System Architecture
@@ -253,6 +257,9 @@ npm test
 ---
 
 ## 📋 Evaluation & Judging Walkthrough
+
+> [!TIP]
+> **Live Demo First Load**: The live demo is hosted on a free tier and may take up to 60 seconds to wake up on first load.
 
 To experience the full functionality of Delta during evaluation:
 
