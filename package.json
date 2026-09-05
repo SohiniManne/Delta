@@ -12,7 +12,7 @@
     "test": "npm run test --prefix backend",
     "start": "npm run start --prefix backend"
   },
-  "devDependencies": {
+  "dependencies": {
     "concurrently": "^9.1.2"
   }
 }

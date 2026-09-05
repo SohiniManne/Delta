@@ -614,5 +614,49 @@
       "createdAt": 1788409893623,
       "updatedAt": 1788582693623
     }
+  ],
+  "test_multi_user_1788589332399": [
+    {
+      "id": "wl-tech-test_multi_user_1788589332399",
+      "userId": "test_multi_user_1788589332399",
+      "name": "Tech Momentum",
+      "symbols": [
+        "TCS",
+        "INFY",
+        "WIPRO",
+        "HCLTECH",
+        "TECHM"
+      ],
+      "createdAt": 1788330132399,
+      "updatedAt": 1788589332399
+    },
+    {
+      "id": "wl-macro-test_multi_user_1788589332399",
+      "userId": "test_multi_user_1788589332399",
+      "name": "Global Macro & Large Cap",
+      "symbols": [
+        "RELIANCE",
+        "HDFCBANK",
+        "ICICIBANK",
+        "ITC",
+        "SBIN"
+      ],
+      "createdAt": 1788502932399,
+      "updatedAt": 1788589332399
+    },
+    {
+      "id": "wl-crypto-test_multi_user_1788589332399",
+      "userId": "test_multi_user_1788589332399",
+      "name": "Digital Assets & Crypto",
+      "symbols": [
+        "BTC",
+        "ETH",
+        "SOL",
+        "MATIC",
+        "USDT"
+      ],
+      "createdAt": 1788416532399,
+      "updatedAt": 1788589332399
+    }
   ]
 }

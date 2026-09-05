@@ -343,5 +343,20 @@ Delta/
 
 ---
 
+## 💻 Assumptions & Cross-Platform Compatibility
+
+- **OS Compatibility**: Fully tested and compatible across **Windows**, **macOS**, and **Linux**.
+- **Path Resolution**: All filesystem reads and database operations use Node.js `path.join(process.cwd(), ...)` to ensure 100% OS-agnostic relative file resolution.
+- **Zero Global Installs**: No global CLI tools (like `pm2`, `nodemon`, or `typescript`) are required. All tooling (`tsx`, `vite`, `typescript`, `concurrently`) is local and executed via `npm` scripts.
+- **Port Assumptions & Conflicts**:
+  - Backend defaults to port `5000` (configurable via `PORT` in `backend/.env`).
+  - Frontend defaults to port `5173` (Vite automatically selects the next available port if 5173 is occupied).
+- **Network Assumptions**:
+  - Core market simulation and structured diff computations run **100% locally and offline**.
+  - Real market data quotes via `yahoo-finance2` connect to public finance endpoints without authentication.
+  - If internet access is unavailable or an upstream service times out, Delta automatically and silently switches to its built-in synthetic market simulator.
+
+---
+
 ## 📄 License
 MIT License. Built for the Hackathon.
