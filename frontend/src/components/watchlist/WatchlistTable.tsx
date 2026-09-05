@@ -250,6 +250,23 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
                             </span>
                           )}
 
+                          {/* Correlation Break Chip */}
+                          {item.correlationBreak && (
+                            <span
+                              className="signal-chip chip-danger"
+                              style={{
+                                background: 'rgba(239, 68, 68, 0.25)',
+                                borderColor: 'rgba(239, 68, 68, 0.5)',
+                                color: '#fca5a5',
+                                fontWeight: 700,
+                              }}
+                              title={`Correlation decoupled with ${item.correlationBreak.tickerA === item.symbol ? item.correlationBreak.tickerB : item.correlationBreak.tickerA} (Spread: ${item.correlationBreak.spreadPercent}%, Historical r=${item.correlationBreak.historicalCorrelation.toFixed(2)})`}
+                            >
+                              <Zap size={10} />
+                              ⚡ Decoupled vs {item.correlationBreak.tickerA === item.symbol ? item.correlationBreak.tickerB : item.correlationBreak.tickerA}
+                            </span>
+                          )}
+
                           {/* Catalyst Badge */}
                           {item.newCatalysts.length > 0 && (
                             <span className="signal-chip chip-catalyst" title={`${item.newCatalysts.length} breaking catalyst events between snapshots`}>
@@ -349,6 +366,37 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
                                 )}
                               </div>
                             </div>
+
+                            {/* Correlation Decoupling Analysis Card */}
+                            {item.correlationBreak && (
+                              <div
+                                style={{
+                                  marginTop: '10px',
+                                  background: 'rgba(239, 68, 68, 0.08)',
+                                  border: '1px solid rgba(239, 68, 68, 0.3)',
+                                  borderRadius: '6px',
+                                  padding: '10px 14px',
+                                }}
+                              >
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#f87171', fontWeight: 700, fontSize: '12px' }}>
+                                    <Zap size={14} />
+                                    <span>Pair Decoupling Detected ({item.correlationBreak.tickerA} &amp; {item.correlationBreak.tickerB})</span>
+                                  </div>
+                                  <span style={{ fontSize: '11px', color: '#fca5a5', fontWeight: 600 }}>
+                                    Historical Correlation: r = {item.correlationBreak.historicalCorrelation.toFixed(2)}
+                                  </span>
+                                </div>
+                                <div style={{ color: 'var(--text-secondary)', fontSize: '11.5px', marginBottom: '6px' }}>
+                                  {item.correlationBreak.summary}
+                                </div>
+                                <div style={{ display: 'flex', gap: '16px', fontSize: '11px', color: 'var(--text-muted)' }}>
+                                  <span>{item.correlationBreak.tickerA}: <strong style={{ color: item.correlationBreak.deltaA >= 0 ? '#34d399' : '#f87171' }}>{item.correlationBreak.deltaA >= 0 ? '+' : ''}{item.correlationBreak.deltaA.toFixed(2)}%</strong></span>
+                                  <span>{item.correlationBreak.tickerB}: <strong style={{ color: item.correlationBreak.deltaB >= 0 ? '#34d399' : '#f87171' }}>{item.correlationBreak.deltaB >= 0 ? '+' : ''}{item.correlationBreak.deltaB.toFixed(2)}%</strong></span>
+                                  <span>Spread: <strong style={{ color: '#f87171' }}>{item.correlationBreak.spreadPercent.toFixed(2)}%</strong></span>
+                                </div>
+                              </div>
+                            )}
 
                             {/* Catalysts List */}
                             {item.newCatalysts.length > 0 && (

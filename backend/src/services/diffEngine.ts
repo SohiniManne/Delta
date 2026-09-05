@@ -9,6 +9,7 @@ import {
 } from '../types/market.js';
 import { marketDataService } from './marketDataService.js';
 import { aiNarratorService } from './aiNarratorService.js';
+import { correlationService } from './correlationService.js';
 
 export class DiffEngine {
   /**
@@ -34,10 +35,14 @@ export class DiffEngine {
         ? sortedByGain[sortedByGain.length - 1]
         : null;
       report.mostActive = [...enhancedDiffs].sort((a, b) => b.volumeRatio - a.volumeRatio)[0] || null;
+
+      // Re-run correlation break detection to ensure enhanced diffs maintain pair links
+      report.correlationBreaks = correlationService.detectCorrelationBreaks(enhancedDiffs);
     } catch {
       // Graceful fallback to sync templated report
     }
 
+    report.dataSourceStatus = marketDataService.getLastDataSourceStatus();
     return report;
   }
 
@@ -199,6 +204,10 @@ export class DiffEngine {
       coldStartMessage = `First visit detected — showing movements since ${baseSnapshot.name || "Today's Market Open (09:15 AM)"}. Click 'Commit Checkpoint' anytime to establish a new baseline.`;
     }
 
+    // Detect correlation break events
+    const correlationBreaks = correlationService.detectCorrelationBreaks(diffs);
+    const dataSourceStatus = marketDataService.getLastDataSourceStatus();
+
     return {
       baseSnapshot: {
         id: baseSnapshot.id,
@@ -218,6 +227,7 @@ export class DiffEngine {
       mostActive,
       diffs,
       totalNewCatalysts,
+      correlationBreaks,
       generatedAt: Date.now(),
       coldStart: {
         isColdStart,
@@ -229,6 +239,7 @@ export class DiffEngine {
         divergenceCount,
         overallConfidence,
       },
+      dataSourceStatus,
     };
   }
 

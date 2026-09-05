@@ -4,6 +4,23 @@ export type CatalystImpact = 'BULLISH' | 'BEARISH' | 'NEUTRAL';
 export type DiffSeverity = 'CRITICAL' | 'MODERATE' | 'LOW' | 'UNCHANGED';
 export type BaselineType = 'USER_COMMIT' | 'AUTO_SESSION' | 'TODAY_OPEN' | 'PREVIOUS_CLOSE';
 
+export type DataSourceReason =
+  | 'LIVE_STREAM'
+  | 'MARKET_CLOSED'
+  | 'RATE_LIMITED'
+  | 'TIMEOUT'
+  | 'SOURCE_UNAVAILABLE'
+  | 'SYNTHETIC_MODE';
+
+export interface DataSourceStatus {
+  isLive: boolean;
+  reason: DataSourceReason;
+  label: string;
+  description: string;
+  asOf: number;
+  isMarketHours: boolean;
+}
+
 export interface DataSourceConfidence {
   level: ConfidenceLevel;
   isDivergent: boolean;
@@ -11,6 +28,8 @@ export interface DataSourceConfidence {
   primaryProvider: string;
   secondaryProvider?: string;
   asOf: number;
+  dataSourceReason?: DataSourceReason;
+  isLiveData?: boolean;
 }
 
 export interface CatalystEvent {
@@ -22,6 +41,22 @@ export interface CatalystEvent {
   impact: CatalystImpact;
   summary: string;
   category: 'EARNINGS' | 'MACRO' | 'PRODUCT' | 'ANALYST' | 'LEGAL' | 'GENERAL';
+}
+
+export interface CorrelationBreakEvent {
+  id: string;
+  tickerA: string;
+  tickerB: string;
+  nameA: string;
+  nameB: string;
+  historicalCorrelation: number; // e.g. 0.88
+  deltaA: number; // e.g. +5.20%
+  deltaB: number; // e.g. -0.10%
+  spreadPercent: number; // e.g. 5.30%
+  severity: 'CRITICAL' | 'MODERATE';
+  headline: string;
+  summary: string;
+  timestamp: number;
 }
 
 export interface TickerState {
@@ -83,6 +118,7 @@ export interface TickerDiff {
   keyTakeaway: string;
   isAiNarrated?: boolean;
   templatedTakeaway?: string;
+  correlationBreak?: CorrelationBreakEvent;
   targetFreshness: FreshnessLevel;
   dataAgeMs: number;
   confidence: DataSourceConfidence;
@@ -110,6 +146,7 @@ export interface WatchlistDiffReport {
   mostActive: TickerDiff | null;
   diffs: TickerDiff[];
   totalNewCatalysts: number;
+  correlationBreaks?: CorrelationBreakEvent[];
   generatedAt: number;
   coldStart: {
     isColdStart: boolean;
@@ -121,6 +158,7 @@ export interface WatchlistDiffReport {
     divergenceCount: number;
     overallConfidence: ConfidenceLevel | 'DEGRADED';
   };
+  dataSourceStatus?: DataSourceStatus;
 }
 
 export interface SearchResult {

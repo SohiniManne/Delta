@@ -20,4 +20,9 @@ export const config = {
     model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
     timeoutMs: parseInt(process.env.GEMINI_TIMEOUT_MS || '3000', 10), // Strict 3s timeout
   },
+  // Real Market Data Layer (Yahoo Finance NSE)
+  liveData: {
+    enabled: process.env.USE_LIVE_DATA === 'true',
+    timeoutMs: parseInt(process.env.YAHOO_TIMEOUT_MS || '3000', 10),
+  },
 };

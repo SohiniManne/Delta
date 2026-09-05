@@ -218,5 +218,269 @@
       "createdAt": 1788404260676,
       "updatedAt": 1788577060676
     }
+  ],
+  "test_multi_user_1788578653773": [
+    {
+      "id": "wl-tech-test_multi_user_1788578653773",
+      "userId": "test_multi_user_1788578653773",
+      "name": "Tech Momentum",
+      "symbols": [
+        "TCS",
+        "INFY",
+        "WIPRO",
+        "HCLTECH",
+        "TECHM"
+      ],
+      "createdAt": 1788319453773,
+      "updatedAt": 1788578653773
+    },
+    {
+      "id": "wl-macro-test_multi_user_1788578653773",
+      "userId": "test_multi_user_1788578653773",
+      "name": "Global Macro & Large Cap",
+      "symbols": [
+        "RELIANCE",
+        "HDFCBANK",
+        "ICICIBANK",
+        "ITC",
+        "SBIN"
+      ],
+      "createdAt": 1788492253773,
+      "updatedAt": 1788578653773
+    },
+    {
+      "id": "wl-crypto-test_multi_user_1788578653773",
+      "userId": "test_multi_user_1788578653773",
+      "name": "Digital Assets & Crypto",
+      "symbols": [
+        "BTC",
+        "ETH",
+        "SOL",
+        "MATIC",
+        "USDT"
+      ],
+      "createdAt": 1788405853773,
+      "updatedAt": 1788578653773
+    }
+  ],
+  "test_multi_user_1788578667036": [
+    {
+      "id": "wl-tech-test_multi_user_1788578667036",
+      "userId": "test_multi_user_1788578667036",
+      "name": "Tech Momentum",
+      "symbols": [
+        "TCS",
+        "INFY",
+        "WIPRO",
+        "HCLTECH",
+        "TECHM"
+      ],
+      "createdAt": 1788319467036,
+      "updatedAt": 1788578667036
+    },
+    {
+      "id": "wl-macro-test_multi_user_1788578667036",
+      "userId": "test_multi_user_1788578667036",
+      "name": "Global Macro & Large Cap",
+      "symbols": [
+        "RELIANCE",
+        "HDFCBANK",
+        "ICICIBANK",
+        "ITC",
+        "SBIN"
+      ],
+      "createdAt": 1788492267036,
+      "updatedAt": 1788578667036
+    },
+    {
+      "id": "wl-crypto-test_multi_user_1788578667036",
+      "userId": "test_multi_user_1788578667036",
+      "name": "Digital Assets & Crypto",
+      "symbols": [
+        "BTC",
+        "ETH",
+        "SOL",
+        "MATIC",
+        "USDT"
+      ],
+      "createdAt": 1788405867036,
+      "updatedAt": 1788578667036
+    }
+  ],
+  "test_multi_user_1788578860951": [
+    {
+      "id": "wl-tech-test_multi_user_1788578860951",
+      "userId": "test_multi_user_1788578860951",
+      "name": "Tech Momentum",
+      "symbols": [
+        "TCS",
+        "INFY",
+        "WIPRO",
+        "HCLTECH",
+        "TECHM"
+      ],
+      "createdAt": 1788319660951,
+      "updatedAt": 1788578860951
+    },
+    {
+      "id": "wl-macro-test_multi_user_1788578860951",
+      "userId": "test_multi_user_1788578860951",
+      "name": "Global Macro & Large Cap",
+      "symbols": [
+        "RELIANCE",
+        "HDFCBANK",
+        "ICICIBANK",
+        "ITC",
+        "SBIN"
+      ],
+      "createdAt": 1788492460951,
+      "updatedAt": 1788578860951
+    },
+    {
+      "id": "wl-crypto-test_multi_user_1788578860951",
+      "userId": "test_multi_user_1788578860951",
+      "name": "Digital Assets & Crypto",
+      "symbols": [
+        "BTC",
+        "ETH",
+        "SOL",
+        "MATIC",
+        "USDT"
+      ],
+      "createdAt": 1788406060951,
+      "updatedAt": 1788578860951
+    }
+  ],
+  "test_multi_user_1788579181238": [
+    {
+      "id": "wl-tech-test_multi_user_1788579181238",
+      "userId": "test_multi_user_1788579181238",
+      "name": "Tech Momentum",
+      "symbols": [
+        "TCS",
+        "INFY",
+        "WIPRO",
+        "HCLTECH",
+        "TECHM"
+      ],
+      "createdAt": 1788319981238,
+      "updatedAt": 1788579181238
+    },
+    {
+      "id": "wl-macro-test_multi_user_1788579181238",
+      "userId": "test_multi_user_1788579181238",
+      "name": "Global Macro & Large Cap",
+      "symbols": [
+        "RELIANCE",
+        "HDFCBANK",
+        "ICICIBANK",
+        "ITC",
+        "SBIN"
+      ],
+      "createdAt": 1788492781238,
+      "updatedAt": 1788579181238
+    },
+    {
+      "id": "wl-crypto-test_multi_user_1788579181238",
+      "userId": "test_multi_user_1788579181238",
+      "name": "Digital Assets & Crypto",
+      "symbols": [
+        "BTC",
+        "ETH",
+        "SOL",
+        "MATIC",
+        "USDT"
+      ],
+      "createdAt": 1788406381238,
+      "updatedAt": 1788579181238
+    }
+  ],
+  "test_multi_user_1788579631409": [
+    {
+      "id": "wl-tech-test_multi_user_1788579631409",
+      "userId": "test_multi_user_1788579631409",
+      "name": "Tech Momentum",
+      "symbols": [
+        "TCS",
+        "INFY",
+        "WIPRO",
+        "HCLTECH",
+        "TECHM"
+      ],
+      "createdAt": 1788320431409,
+      "updatedAt": 1788579631409
+    },
+    {
+      "id": "wl-macro-test_multi_user_1788579631409",
+      "userId": "test_multi_user_1788579631409",
+      "name": "Global Macro & Large Cap",
+      "symbols": [
+        "RELIANCE",
+        "HDFCBANK",
+        "ICICIBANK",
+        "ITC",
+        "SBIN"
+      ],
+      "createdAt": 1788493231409,
+      "updatedAt": 1788579631409
+    },
+    {
+      "id": "wl-crypto-test_multi_user_1788579631409",
+      "userId": "test_multi_user_1788579631409",
+      "name": "Digital Assets & Crypto",
+      "symbols": [
+        "BTC",
+        "ETH",
+        "SOL",
+        "MATIC",
+        "USDT"
+      ],
+      "createdAt": 1788406831409,
+      "updatedAt": 1788579631409
+    }
+  ],
+  "test_multi_user_1788579713309": [
+    {
+      "id": "wl-tech-test_multi_user_1788579713309",
+      "userId": "test_multi_user_1788579713309",
+      "name": "Tech Momentum",
+      "symbols": [
+        "TCS",
+        "INFY",
+        "WIPRO",
+        "HCLTECH",
+        "TECHM"
+      ],
+      "createdAt": 1788320513309,
+      "updatedAt": 1788579713309
+    },
+    {
+      "id": "wl-macro-test_multi_user_1788579713309",
+      "userId": "test_multi_user_1788579713309",
+      "name": "Global Macro & Large Cap",
+      "symbols": [
+        "RELIANCE",
+        "HDFCBANK",
+        "ICICIBANK",
+        "ITC",
+        "SBIN"
+      ],
+      "createdAt": 1788493313309,
+      "updatedAt": 1788579713309
+    },
+    {
+      "id": "wl-crypto-test_multi_user_1788579713309",
+      "userId": "test_multi_user_1788579713309",
+      "name": "Digital Assets & Crypto",
+      "symbols": [
+        "BTC",
+        "ETH",
+        "SOL",
+        "MATIC",
+        "USDT"
+      ],
+      "createdAt": 1788406913309,
+      "updatedAt": 1788579713309
+    }
   ]
 }

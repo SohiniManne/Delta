@@ -97,6 +97,43 @@ router.post('/simulate/shock', (req: Request, res: Response) => {
   res.json({ message: `Price shock of ${percentShift}% applied to ${symbol}`, ticker: updated });
 });
 
+// GET /api/market/data-source-status
+router.get('/data-source-status', (_req: Request, res: Response) => {
+  const status = marketDataService.getLastDataSourceStatus();
+  res.json(status);
+});
+
+// POST /api/market/sync-live
+router.post('/sync-live', async (req: Request, res: Response) => {
+  const { symbols } = req.body;
+  const status = await marketDataService.syncWithLiveData(symbols);
+  const tickers = marketDataService.getAllTickerStates(symbols);
+  res.json({ status, tickers });
+});
+
+// POST /api/market/simulate/live-data-mode
+router.post('/simulate/live-data-mode', async (req: Request, res: Response) => {
+  const { mode } = req.body; // 'LIVE_STREAM' | 'MARKET_CLOSED' | 'RATE_LIMITED' | 'TIMEOUT' | 'SOURCE_UNAVAILABLE' | 'SYNTHETIC_MODE' | null
+  const { liveMarketDataService } = await import('../services/liveMarketDataService.js');
+  liveMarketDataService.setSimulationOverride(mode || null);
+  const status = marketDataService.getLastDataSourceStatus();
+  res.json({ message: `Live data mode override set to: ${mode || 'AUTO'}`, status });
+});
+
+// POST /api/market/simulate/correlation-break
+router.post('/simulate/correlation-break', (req: Request, res: Response) => {
+  const { symbolA = 'INFY', symbolB = 'TCS', spreadShift = 5.2 } = req.body;
+  const result = marketDataService.triggerCorrelationBreak(symbolA, symbolB, Number(spreadShift));
+  if (!result) {
+    res.status(404).json({ error: `Could not trigger correlation break for pair ${symbolA}/${symbolB}` });
+    return;
+  }
+  res.json({
+    message: `Correlation break triggered: ${symbolA} decoupled from ${symbolB} by ${spreadShift}% spread`,
+    pair: result,
+  });
+});
+
 // POST /api/market/simulate/ai-failure
 router.post('/simulate/ai-failure', async (req: Request, res: Response) => {
   const { failed = true } = req.body;

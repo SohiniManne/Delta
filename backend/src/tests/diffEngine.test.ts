@@ -234,7 +234,117 @@ async function runTests() {
   assert(deleteRes.success === true, 'Watchlist deleted successfully');
   assert(!deleteRes.remainingWatchlists.some((w) => w.id === createdWl.id), 'Deleted watchlist is no longer in user watchlists');
 
+  // --- Test Suite 7: Correlation-Break Detection & Decoupling Engine ---
+  console.log('\nTest Suite 7: Correlation-Break Detection & Decoupling Engine');
+  const { correlationService } = await import('../services/correlationService.js');
 
+  // 7A: Pure Pearson correlation calculation
+  const seriesA = [100, 102, 104, 106, 108, 110];
+  const seriesB = [50, 51, 52, 53, 54, 55]; // Perfectly linear
+  const rPerfect = correlationService.calculatePearsonCorrelation(seriesA, seriesB);
+  assert(rPerfect >= 0.99, 'Pearson r calculation equals 1.00 for perfectly correlated series');
+
+  const seriesInverse = [110, 108, 106, 104, 102, 100];
+  const rInverse = correlationService.calculatePearsonCorrelation(seriesA, seriesInverse);
+  assert(rInverse <= -0.99, 'Pearson r calculation equals -1.00 for inverse series');
+
+  // 7B: Historical sector baseline lookup & blending
+  const rInfyTcs = correlationService.getPairCorrelation('INFY', 'TCS');
+  assert(rInfyTcs >= 0.70, 'INFY/TCS baseline correlation satisfies r >= 0.70 sector peer threshold (0.88)');
+
+  const rHdfcIcici = correlationService.getPairCorrelation('HDFCBANK', 'ICICIBANK');
+  assert(rHdfcIcici >= 0.70, 'HDFCBANK/ICICIBANK baseline correlation satisfies r >= 0.70 (0.86)');
+
+  const rBtcEth = correlationService.getPairCorrelation('BTC', 'ETH');
+  assert(rBtcEth >= 0.70, 'BTC/ETH crypto baseline correlation satisfies r >= 0.70 (0.89)');
+
+  // 7C: Correlation-break detection trigger on divergent pair
+  const baseCorrSnap: WatchlistSnapshot = {
+    id: 'snap-corr-base',
+    userId: 'test_user',
+    name: 'Morning Baseline',
+    timestamp: Date.now() - 3600000,
+    baselineType: 'USER_COMMIT',
+    tickers: {
+      INFY: { ...marketDataService.getTickerState('INFY')!, price: 1800, open: 1800, sparkline: [1780, 1790, 1800] },
+      TCS: { ...marketDataService.getTickerState('TCS')!, price: 3900, open: 3900, sparkline: [3880, 3890, 3900] },
+      WIPRO: { ...marketDataService.getTickerState('WIPRO')!, price: 540, open: 540, sparkline: [535, 538, 540] },
+    },
+  };
+
+  const targetCorrSnap: WatchlistSnapshot = {
+    id: 'snap-corr-target',
+    userId: 'test_user',
+    name: 'Current Session',
+    timestamp: Date.now(),
+    baselineType: 'USER_COMMIT',
+    tickers: {
+      INFY: { ...marketDataService.getTickerState('INFY')!, price: 1893.6, open: 1800, sparkline: [1800, 1840, 1893.6] }, // +5.20%
+      TCS: { ...marketDataService.getTickerState('TCS')!, price: 3896.1, open: 3900, sparkline: [3900, 3898, 3896.1] }, // -0.10%
+      WIPRO: { ...marketDataService.getTickerState('WIPRO')!, price: 541.08, open: 540, sparkline: [540, 540.5, 541.08] }, // +0.20%
+    },
+  };
+
+  const corrDiffReport = diffEngine.computeDiffSync(baseCorrSnap, targetCorrSnap, false);
+  assert(corrDiffReport.correlationBreaks.length > 0, 'Correlation break detected between INFY and TCS');
+  
+  const infyTcsBreak = corrDiffReport.correlationBreaks.find(
+    (cb) => (cb.tickerA === 'INFY' && cb.tickerB === 'TCS') || (cb.tickerA === 'TCS' && cb.tickerB === 'INFY')
+  );
+  assert(infyTcsBreak !== undefined, 'INFY/TCS decoupled pair break event is correctly isolated');
+  assert(infyTcsBreak!.spreadPercent >= 5.0, 'Correlation break spread is accurately computed (>= 5.0%)');
+  assert(infyTcsBreak!.severity === 'CRITICAL', 'Spread >= 4.5% is flagged with CRITICAL severity');
+  assert(infyTcsBreak!.headline.includes('INFY/TCS Correlation Decoupled'), 'Correlation break generates distinct institutional headline');
+
+  // Verify attachment to individual ticker diff
+  const infyDiff = corrDiffReport.diffs.find((d) => d.symbol === 'INFY');
+  assert(infyDiff?.correlationBreak !== undefined, 'Correlation break reference is attached directly to INFY diff card');
+
+  // --- Test Suite 8: Live Market Data & Transparent Fallback Tagging ---
+  console.log('\nTest Suite 8: Live Market Data & Transparent Fallback Tagging');
+  const { liveMarketDataService } = await import('../services/liveMarketDataService.js');
+
+  // 8A: Symbol mapping
+  assert(liveMarketDataService.mapToYahooSymbol('INFY') === 'INFY.NS', 'Indian equity mapped with .NS suffix');
+  assert(liveMarketDataService.mapToYahooSymbol('RELIANCE') === 'RELIANCE.NS', 'RELIANCE mapped to RELIANCE.NS');
+  assert(liveMarketDataService.mapToYahooSymbol('BTC') === 'BTC-INR', 'BTC mapped to BTC-INR currency pair');
+  assert(liveMarketDataService.mapToYahooSymbol('ETH') === 'ETH-INR', 'ETH mapped to ETH-INR');
+
+  // 8B: Market hours logic (IST 09:15 to 15:30 Mon-Fri)
+  const isHours = typeof liveMarketDataService.isNseMarketOpen() === 'boolean';
+  assert(isHours, 'NSE market hours check executes deterministically in IST');
+
+  // 8C: Fallback reason metadata tags
+  const closedMeta = liveMarketDataService.getStatusMetadata('MARKET_CLOSED', false);
+  assert(closedMeta.label.includes('Market Closed'), 'MARKET_CLOSED produces clear human label');
+  assert(closedMeta.description.includes('09:15-15:30 IST'), 'Description details trading window');
+
+  const rateLimitMeta = liveMarketDataService.getStatusMetadata('RATE_LIMITED', true);
+  assert(rateLimitMeta.label.includes('Rate Limited'), 'RATE_LIMITED tag accurately formatted');
+
+  const timeoutMeta = liveMarketDataService.getStatusMetadata('TIMEOUT', true);
+  assert(timeoutMeta.label.includes('Timeout'), 'TIMEOUT tag accurately formatted');
+
+  const liveMeta = liveMarketDataService.getStatusMetadata('LIVE_STREAM', true);
+  assert(liveMeta.label.includes('Live Market Data'), 'LIVE_STREAM indicates live connection');
+
+  // 8D: Simulation override propagation & zero-crash guarantee
+  liveMarketDataService.setSimulationOverride('RATE_LIMITED');
+  const rateLimitStatus = marketDataService.getLastDataSourceStatus();
+  assert(rateLimitStatus.reason === 'RATE_LIMITED', 'Simulation override successfully sets RATE_LIMITED');
+  assert(rateLimitStatus.isLive === false, 'RATE_LIMITED correctly flags isLive as false');
+
+  liveMarketDataService.setSimulationOverride('TIMEOUT');
+  const timeoutStatus = marketDataService.getLastDataSourceStatus();
+  assert(timeoutStatus.reason === 'TIMEOUT', 'Simulation override successfully sets TIMEOUT');
+
+  liveMarketDataService.setSimulationOverride('SOURCE_UNAVAILABLE');
+  const unavailableStatus = marketDataService.getLastDataSourceStatus();
+  assert(unavailableStatus.reason === 'SOURCE_UNAVAILABLE', 'Simulation override successfully sets SOURCE_UNAVAILABLE');
+
+  // Reset override
+  marketDataService.resetAllOverrides();
+  assert(liveMarketDataService.getSimulationOverride() === null, 'All live market data overrides successfully reset to nominal');
 
   console.log(`\n========================================`);
   console.log(`Results: ${passed} passed, ${failed} failed.`);

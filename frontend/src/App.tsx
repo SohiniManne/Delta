@@ -104,6 +104,7 @@ export function App() {
         lastUpdated={lastUpdated}
         userId={userId}
         onOpenUserModal={() => setIsUserModalOpen(true)}
+        dataSourceStatus={report?.dataSourceStatus}
       />
 
       {/* 2. Interactive Demo Simulation Controls */}

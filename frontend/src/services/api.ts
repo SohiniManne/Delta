@@ -210,3 +210,49 @@ export async function resetSimulation(symbol: string): Promise<void> {
     body: JSON.stringify({ symbol, divergencePercent: null }),
   });
 }
+
+export async function fetchDataSourceStatus(): Promise<any> {
+  const res = await fetch(`${API_BASE}/market/data-source-status`);
+  if (!res.ok) throw new Error('Failed to fetch data source status');
+  return res.json();
+}
+
+export async function simulateLiveDataMode(mode: string | null): Promise<any> {
+  const res = await fetch(`${API_BASE}/market/simulate/live-data-mode`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mode }),
+  });
+  if (!res.ok) throw new Error('Failed to set live data mode override');
+  return res.json();
+}
+
+export async function simulateCorrelationBreak(symbolA = 'INFY', symbolB = 'TCS', spreadShift = 5.2): Promise<any> {
+  const res = await fetch(`${API_BASE}/market/simulate/correlation-break`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ symbolA, symbolB, spreadShift }),
+  });
+  if (!res.ok) throw new Error('Failed to trigger correlation break');
+  return res.json();
+}
+
+export async function simulateAiFailure(failed: boolean): Promise<any> {
+  const res = await fetch(`${API_BASE}/market/simulate/ai-failure`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ failed }),
+  });
+  if (!res.ok) throw new Error('Failed to set AI failure simulation');
+  return res.json();
+}
+
+export async function syncLiveData(symbols?: string[]): Promise<any> {
+  const res = await fetch(`${API_BASE}/market/sync-live`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ symbols }),
+  });
+  if (!res.ok) throw new Error('Failed to sync live market quotes');
+  return res.json();
+}

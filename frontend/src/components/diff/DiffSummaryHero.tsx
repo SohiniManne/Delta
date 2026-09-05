@@ -147,6 +147,86 @@ export const DiffSummaryHero: React.FC<DiffSummaryHeroProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Correlation-Break Alert Banner (When Sector Peers Decouple) */}
+      {report.correlationBreaks && report.correlationBreaks.length > 0 && (
+        <div
+          style={{
+            marginTop: '12px',
+            background: 'linear-gradient(90deg, rgba(239, 68, 68, 0.15) 0%, rgba(245, 158, 11, 0.10) 100%)',
+            border: '1px solid rgba(239, 68, 68, 0.35)',
+            borderRadius: '8px',
+            padding: '12px 16px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '8px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#f87171', fontWeight: 700, fontSize: '13px' }}>
+              <Zap size={16} />
+              <span>⚡ CORRELATION BREAK DETECTED ({report.correlationBreaks.length} PAIR{report.correlationBreaks.length > 1 ? 'S' : ''})</span>
+            </div>
+            <span
+              style={{
+                fontSize: '10px',
+                fontWeight: 700,
+                background: 'rgba(239, 68, 68, 0.25)',
+                color: '#fca5a5',
+                padding: '2px 8px',
+                borderRadius: '4px',
+                border: '1px solid rgba(239, 68, 68, 0.4)',
+              }}
+            >
+              STATISTICAL ANOMALY
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {report.correlationBreaks.map((cb) => (
+              <div
+                key={cb.id}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  background: 'rgba(0, 0, 0, 0.3)',
+                  padding: '8px 12px',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                }}
+              >
+                <div>
+                  <span style={{ fontWeight: 700, color: 'var(--text-primary)' }}>
+                    {cb.tickerA} &amp; {cb.tickerB}
+                  </span>
+                  <span style={{ color: 'var(--text-muted)', marginLeft: '6px', fontSize: '11px' }}>
+                    (Historical r = {cb.historicalCorrelation.toFixed(2)})
+                  </span>
+                  <div style={{ color: 'var(--text-secondary)', fontSize: '11px', marginTop: '2px' }}>
+                    {cb.headline}
+                  </div>
+                </div>
+
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontWeight: 700, color: '#f87171', fontSize: '13px' }} className="mono">
+                    Δ Spread: {cb.spreadPercent.toFixed(2)}%
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '10px',
+                      color: cb.severity === 'CRITICAL' ? '#fca5a5' : '#fde047',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {cb.severity} SEVERITY
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

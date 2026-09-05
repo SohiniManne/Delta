@@ -1286,9 +1286,909 @@
         }
       },
       "isSyntheticColdStart": false
+    },
+    {
+      "id": "snap-1788578653782-dbg5e",
+      "userId": "test_multi_user_1788578653773",
+      "watchlistId": "wl-tech-test_multi_user_1788578653773",
+      "name": "Tech Checkpoint Alpha",
+      "timestamp": 1788578653782,
+      "baselineType": "USER_COMMIT",
+      "tickers": {
+        "TCS": {
+          "symbol": "TCS",
+          "name": "Tata Consultancy Services Ltd",
+          "price": 4218.5,
+          "open": 4150,
+          "high": 4281.777499999999,
+          "low": 4100.2,
+          "volume": 1592500,
+          "avgVolume": 2450000,
+          "peRatio": 31.4,
+          "marketCap": 15250000000000,
+          "rsi14": 57.4,
+          "macd": {
+            "value": 5.48,
+            "signal": 4.11,
+            "histogram": 1.37
+          },
+          "sparkline": [
+            4149.57,
+            4158.15,
+            4160.5,
+            4169.06,
+            4173.67,
+            4173.1,
+            4170.49,
+            4173.99,
+            4178.6,
+            4183.1,
+            4191.29,
+            4200.47,
+            4195.08,
+            4201.59,
+            4205.94,
+            4203.39,
+            4212.7,
+            4217.82,
+            4226.6,
+            4218.5
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-tcs-1",
+              "symbol": "TCS",
+              "timestamp": 1788577693390,
+              "headline": "TCS Bags $1.2B Mega Cloud Modernization Deal from Leading European Banking Group",
+              "source": "CNBC-TV18",
+              "impact": "BULLISH",
+              "summary": "Multi-year engagement to deploy hybrid cloud, AI copilots, and core banking infrastructure transformation across 12 countries.",
+              "category": "PRODUCT"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 256,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788578653526,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        },
+        "INFY": {
+          "symbol": "INFY",
+          "name": "Infosys Limited",
+          "price": 1942.8,
+          "open": 1885,
+          "high": 1971.9419999999998,
+          "low": 1862.3799999999999,
+          "volume": 3770000,
+          "avgVolume": 5800000,
+          "peRatio": 28.2,
+          "marketCap": 8060000000000,
+          "rsi14": 63.8,
+          "macd": {
+            "value": 4.62,
+            "signal": 3.47,
+            "histogram": 1.16
+          },
+          "sparkline": [
+            1882.41,
+            1888.78,
+            1893.27,
+            1892.06,
+            1900.81,
+            1898.06,
+            1899.27,
+            1903.55,
+            1912.4,
+            1914.5,
+            1920.61,
+            1918.4,
+            1917.16,
+            1918.85,
+            1919.33,
+            1921.02,
+            1929.51,
+            1936.11,
+            1934.98,
+            1942.8
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-infy-1",
+              "symbol": "INFY",
+              "timestamp": 1788576973390,
+              "headline": "Infosys Raises FY26 Constant Currency Revenue Growth Guidance to 4.5% - 5.0%",
+              "source": "Moneycontrol",
+              "impact": "BULLISH",
+              "summary": "Strong digital AI deals and Topaz generative AI suite expansion drove quarterly large deal TCV of $3.2 billion.",
+              "category": "EARNINGS"
+            },
+            {
+              "id": "cat-infy-2",
+              "symbol": "INFY",
+              "timestamp": 1788564253390,
+              "headline": "Nomura Upgrades Infosys to Buy with Price Target of ₹2,150 on Margin Recovery",
+              "source": "The Economic Times",
+              "impact": "BULLISH",
+              "summary": "Brokerage highlights accelerating BFSI discretionary IT spend and operational efficiency gains.",
+              "category": "ANALYST"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 256,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788578653526,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        }
+      },
+      "isSyntheticColdStart": false
+    },
+    {
+      "id": "snap-1788578667042-t30qc",
+      "userId": "test_multi_user_1788578667036",
+      "watchlistId": "wl-tech-test_multi_user_1788578667036",
+      "name": "Tech Checkpoint Alpha",
+      "timestamp": 1788578667042,
+      "baselineType": "USER_COMMIT",
+      "tickers": {
+        "TCS": {
+          "symbol": "TCS",
+          "name": "Tata Consultancy Services Ltd",
+          "price": 4218.5,
+          "open": 4150,
+          "high": 4281.777499999999,
+          "low": 4100.2,
+          "volume": 1592500,
+          "avgVolume": 2450000,
+          "peRatio": 31.4,
+          "marketCap": 15250000000000,
+          "rsi14": 57.4,
+          "macd": {
+            "value": 5.48,
+            "signal": 4.11,
+            "histogram": 1.37
+          },
+          "sparkline": [
+            4146.25,
+            4147.86,
+            4159.95,
+            4154.87,
+            4158.29,
+            4156.91,
+            4152.49,
+            4149.17,
+            4156.67,
+            4155.44,
+            4168.34,
+            4179.4,
+            4180.29,
+            4190.38,
+            4200.6,
+            4208.75,
+            4203.72,
+            4214.19,
+            4219.84,
+            4218.5
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-tcs-1",
+              "symbol": "TCS",
+              "timestamp": 1788577706679,
+              "headline": "TCS Bags $1.2B Mega Cloud Modernization Deal from Leading European Banking Group",
+              "source": "CNBC-TV18",
+              "impact": "BULLISH",
+              "summary": "Multi-year engagement to deploy hybrid cloud, AI copilots, and core banking infrastructure transformation across 12 countries.",
+              "category": "PRODUCT"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 238,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788578666804,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        },
+        "INFY": {
+          "symbol": "INFY",
+          "name": "Infosys Limited",
+          "price": 1942.8,
+          "open": 1885,
+          "high": 1971.9419999999998,
+          "low": 1862.3799999999999,
+          "volume": 3770000,
+          "avgVolume": 5800000,
+          "peRatio": 28.2,
+          "marketCap": 8060000000000,
+          "rsi14": 63.8,
+          "macd": {
+            "value": 4.62,
+            "signal": 3.47,
+            "histogram": 1.16
+          },
+          "sparkline": [
+            1891.19,
+            1891.16,
+            1900.36,
+            1897.58,
+            1902.55,
+            1901.26,
+            1909.85,
+            1907,
+            1912.93,
+            1915.67,
+            1915.24,
+            1923.42,
+            1926.95,
+            1925.56,
+            1922.53,
+            1922.45,
+            1928.55,
+            1929.87,
+            1928.71,
+            1942.8
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-infy-1",
+              "symbol": "INFY",
+              "timestamp": 1788576986679,
+              "headline": "Infosys Raises FY26 Constant Currency Revenue Growth Guidance to 4.5% - 5.0%",
+              "source": "Moneycontrol",
+              "impact": "BULLISH",
+              "summary": "Strong digital AI deals and Topaz generative AI suite expansion drove quarterly large deal TCV of $3.2 billion.",
+              "category": "EARNINGS"
+            },
+            {
+              "id": "cat-infy-2",
+              "symbol": "INFY",
+              "timestamp": 1788564266679,
+              "headline": "Nomura Upgrades Infosys to Buy with Price Target of ₹2,150 on Margin Recovery",
+              "source": "The Economic Times",
+              "impact": "BULLISH",
+              "summary": "Brokerage highlights accelerating BFSI discretionary IT spend and operational efficiency gains.",
+              "category": "ANALYST"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 238,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788578666804,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        }
+      },
+      "isSyntheticColdStart": false
+    },
+    {
+      "id": "snap-1788578860958-318tk",
+      "userId": "test_multi_user_1788578860951",
+      "watchlistId": "wl-tech-test_multi_user_1788578860951",
+      "name": "Tech Checkpoint Alpha",
+      "timestamp": 1788578860958,
+      "baselineType": "USER_COMMIT",
+      "tickers": {
+        "TCS": {
+          "symbol": "TCS",
+          "name": "Tata Consultancy Services Ltd",
+          "price": 4218.5,
+          "open": 4150,
+          "high": 4281.777499999999,
+          "low": 4100.2,
+          "volume": 1592500,
+          "avgVolume": 2450000,
+          "peRatio": 31.4,
+          "marketCap": 15250000000000,
+          "rsi14": 57.4,
+          "macd": {
+            "value": 5.48,
+            "signal": 4.11,
+            "histogram": 1.37
+          },
+          "sparkline": [
+            4154.42,
+            4167.37,
+            4175.68,
+            4174.14,
+            4171.96,
+            4184.95,
+            4192.26,
+            4203.61,
+            4213.43,
+            4223.72,
+            4220.87,
+            4231.62,
+            4235.93,
+            4243,
+            4250.83,
+            4248.99,
+            4253.37,
+            4254.95,
+            4261.79,
+            4218.5
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-tcs-1",
+              "symbol": "TCS",
+              "timestamp": 1788577900583,
+              "headline": "TCS Bags $1.2B Mega Cloud Modernization Deal from Leading European Banking Group",
+              "source": "CNBC-TV18",
+              "impact": "BULLISH",
+              "summary": "Multi-year engagement to deploy hybrid cloud, AI copilots, and core banking infrastructure transformation across 12 countries.",
+              "category": "PRODUCT"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 247,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788578860712,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        },
+        "INFY": {
+          "symbol": "INFY",
+          "name": "Infosys Limited",
+          "price": 1942.8,
+          "open": 1885,
+          "high": 1971.9419999999998,
+          "low": 1862.3799999999999,
+          "volume": 3770000,
+          "avgVolume": 5800000,
+          "peRatio": 28.2,
+          "marketCap": 8060000000000,
+          "rsi14": 63.8,
+          "macd": {
+            "value": 4.62,
+            "signal": 3.47,
+            "histogram": 1.16
+          },
+          "sparkline": [
+            1889.03,
+            1890.42,
+            1895.27,
+            1893.65,
+            1890.6,
+            1892.4,
+            1896.76,
+            1905.18,
+            1912.88,
+            1920.77,
+            1926.6,
+            1926.09,
+            1930.65,
+            1936.41,
+            1942.16,
+            1943.67,
+            1952.99,
+            1958.5,
+            1965.45,
+            1942.8
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-infy-1",
+              "symbol": "INFY",
+              "timestamp": 1788577180583,
+              "headline": "Infosys Raises FY26 Constant Currency Revenue Growth Guidance to 4.5% - 5.0%",
+              "source": "Moneycontrol",
+              "impact": "BULLISH",
+              "summary": "Strong digital AI deals and Topaz generative AI suite expansion drove quarterly large deal TCV of $3.2 billion.",
+              "category": "EARNINGS"
+            },
+            {
+              "id": "cat-infy-2",
+              "symbol": "INFY",
+              "timestamp": 1788564460583,
+              "headline": "Nomura Upgrades Infosys to Buy with Price Target of ₹2,150 on Margin Recovery",
+              "source": "The Economic Times",
+              "impact": "BULLISH",
+              "summary": "Brokerage highlights accelerating BFSI discretionary IT spend and operational efficiency gains.",
+              "category": "ANALYST"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 247,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788578860712,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        }
+      },
+      "isSyntheticColdStart": false
+    },
+    {
+      "id": "snap-1788579181245-wlc9c",
+      "userId": "test_multi_user_1788579181238",
+      "watchlistId": "wl-tech-test_multi_user_1788579181238",
+      "name": "Tech Checkpoint Alpha",
+      "timestamp": 1788579181245,
+      "baselineType": "USER_COMMIT",
+      "tickers": {
+        "TCS": {
+          "symbol": "TCS",
+          "name": "Tata Consultancy Services Ltd",
+          "price": 4218.5,
+          "open": 4150,
+          "high": 4281.777499999999,
+          "low": 4100.2,
+          "volume": 1592500,
+          "avgVolume": 2450000,
+          "peRatio": 31.4,
+          "marketCap": 15250000000000,
+          "rsi14": 57.4,
+          "macd": {
+            "value": 5.48,
+            "signal": 4.11,
+            "histogram": 1.37
+          },
+          "sparkline": [
+            4162.88,
+            4163.49,
+            4167.55,
+            4170.16,
+            4174.18,
+            4170.02,
+            4179.9,
+            4189.21,
+            4188.94,
+            4201.91,
+            4203.73,
+            4212.91,
+            4208.84,
+            4217.78,
+            4228.84,
+            4234.89,
+            4243.36,
+            4243.65,
+            4254.94,
+            4218.5
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-tcs-1",
+              "symbol": "TCS",
+              "timestamp": 1788578220843,
+              "headline": "TCS Bags $1.2B Mega Cloud Modernization Deal from Leading European Banking Group",
+              "source": "CNBC-TV18",
+              "impact": "BULLISH",
+              "summary": "Multi-year engagement to deploy hybrid cloud, AI copilots, and core banking infrastructure transformation across 12 countries.",
+              "category": "PRODUCT"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 269,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788579180976,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        },
+        "INFY": {
+          "symbol": "INFY",
+          "name": "Infosys Limited",
+          "price": 1942.8,
+          "open": 1885,
+          "high": 1971.9419999999998,
+          "low": 1862.3799999999999,
+          "volume": 3770000,
+          "avgVolume": 5800000,
+          "peRatio": 28.2,
+          "marketCap": 8060000000000,
+          "rsi14": 63.8,
+          "macd": {
+            "value": 4.62,
+            "signal": 3.47,
+            "histogram": 1.16
+          },
+          "sparkline": [
+            1882.99,
+            1888.61,
+            1897.21,
+            1901.52,
+            1899.13,
+            1904.7,
+            1913.93,
+            1914.39,
+            1923.93,
+            1926.79,
+            1929.29,
+            1936.07,
+            1939.11,
+            1944.61,
+            1952.5,
+            1949.44,
+            1955.98,
+            1957.42,
+            1965.12,
+            1942.8
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-infy-1",
+              "symbol": "INFY",
+              "timestamp": 1788577500843,
+              "headline": "Infosys Raises FY26 Constant Currency Revenue Growth Guidance to 4.5% - 5.0%",
+              "source": "Moneycontrol",
+              "impact": "BULLISH",
+              "summary": "Strong digital AI deals and Topaz generative AI suite expansion drove quarterly large deal TCV of $3.2 billion.",
+              "category": "EARNINGS"
+            },
+            {
+              "id": "cat-infy-2",
+              "symbol": "INFY",
+              "timestamp": 1788564780843,
+              "headline": "Nomura Upgrades Infosys to Buy with Price Target of ₹2,150 on Margin Recovery",
+              "source": "The Economic Times",
+              "impact": "BULLISH",
+              "summary": "Brokerage highlights accelerating BFSI discretionary IT spend and operational efficiency gains.",
+              "category": "ANALYST"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 270,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788579180976,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        }
+      },
+      "isSyntheticColdStart": false
+    },
+    {
+      "id": "snap-1788579631415-rvwal",
+      "userId": "test_multi_user_1788579631409",
+      "watchlistId": "wl-tech-test_multi_user_1788579631409",
+      "name": "Tech Checkpoint Alpha",
+      "timestamp": 1788579631415,
+      "baselineType": "USER_COMMIT",
+      "tickers": {
+        "TCS": {
+          "symbol": "TCS",
+          "name": "Tata Consultancy Services Ltd",
+          "price": 4218.5,
+          "open": 4150,
+          "high": 4281.777499999999,
+          "low": 4100.2,
+          "volume": 1592500,
+          "avgVolume": 2450000,
+          "peRatio": 31.4,
+          "marketCap": 15250000000000,
+          "rsi14": 57.4,
+          "macd": {
+            "value": 5.48,
+            "signal": 4.11,
+            "histogram": 1.37
+          },
+          "sparkline": [
+            4149.51,
+            4159.31,
+            4162.81,
+            4173.91,
+            4168.54,
+            4179.39,
+            4175.49,
+            4180.15,
+            4177.4,
+            4177.5,
+            4171.82,
+            4171.79,
+            4184.89,
+            4190.71,
+            4198.15,
+            4203.15,
+            4213.96,
+            4226.12,
+            4226.39,
+            4218.5
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-tcs-1",
+              "symbol": "TCS",
+              "timestamp": 1788578671060,
+              "headline": "TCS Bags $1.2B Mega Cloud Modernization Deal from Leading European Banking Group",
+              "source": "CNBC-TV18",
+              "impact": "BULLISH",
+              "summary": "Multi-year engagement to deploy hybrid cloud, AI copilots, and core banking infrastructure transformation across 12 countries.",
+              "category": "PRODUCT"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 233,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788579631182,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        },
+        "INFY": {
+          "symbol": "INFY",
+          "name": "Infosys Limited",
+          "price": 1942.8,
+          "open": 1885,
+          "high": 1971.9419999999998,
+          "low": 1862.3799999999999,
+          "volume": 3770000,
+          "avgVolume": 5800000,
+          "peRatio": 28.2,
+          "marketCap": 8060000000000,
+          "rsi14": 63.8,
+          "macd": {
+            "value": 4.62,
+            "signal": 3.47,
+            "histogram": 1.16
+          },
+          "sparkline": [
+            1883.4,
+            1882.65,
+            1888.93,
+            1897.36,
+            1900.24,
+            1907.55,
+            1906.76,
+            1915.15,
+            1917.17,
+            1924.26,
+            1928.04,
+            1935.03,
+            1940.18,
+            1944.97,
+            1951.13,
+            1958.49,
+            1960.03,
+            1969.43,
+            1968.74,
+            1942.8
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-infy-1",
+              "symbol": "INFY",
+              "timestamp": 1788577951060,
+              "headline": "Infosys Raises FY26 Constant Currency Revenue Growth Guidance to 4.5% - 5.0%",
+              "source": "Moneycontrol",
+              "impact": "BULLISH",
+              "summary": "Strong digital AI deals and Topaz generative AI suite expansion drove quarterly large deal TCV of $3.2 billion.",
+              "category": "EARNINGS"
+            },
+            {
+              "id": "cat-infy-2",
+              "symbol": "INFY",
+              "timestamp": 1788565231060,
+              "headline": "Nomura Upgrades Infosys to Buy with Price Target of ₹2,150 on Margin Recovery",
+              "source": "The Economic Times",
+              "impact": "BULLISH",
+              "summary": "Brokerage highlights accelerating BFSI discretionary IT spend and operational efficiency gains.",
+              "category": "ANALYST"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 233,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788579631182,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        }
+      },
+      "isSyntheticColdStart": false
+    },
+    {
+      "id": "snap-1788579713314-54twt",
+      "userId": "test_multi_user_1788579713309",
+      "watchlistId": "wl-tech-test_multi_user_1788579713309",
+      "name": "Tech Checkpoint Alpha",
+      "timestamp": 1788579713314,
+      "baselineType": "USER_COMMIT",
+      "tickers": {
+        "TCS": {
+          "symbol": "TCS",
+          "name": "Tata Consultancy Services Ltd",
+          "price": 4218.5,
+          "open": 4150,
+          "high": 4281.777499999999,
+          "low": 4100.2,
+          "volume": 1592500,
+          "avgVolume": 2450000,
+          "peRatio": 31.4,
+          "marketCap": 15250000000000,
+          "rsi14": 57.4,
+          "macd": {
+            "value": 5.48,
+            "signal": 4.11,
+            "histogram": 1.37
+          },
+          "sparkline": [
+            4159.42,
+            4155.58,
+            4161.85,
+            4162.37,
+            4175.62,
+            4179.18,
+            4176.24,
+            4171.78,
+            4170.41,
+            4183.4,
+            4178.62,
+            4187.38,
+            4200.4,
+            4196.52,
+            4199.02,
+            4203.94,
+            4214.38,
+            4222.16,
+            4221.76,
+            4218.5
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-tcs-1",
+              "symbol": "TCS",
+              "timestamp": 1788578752961,
+              "headline": "TCS Bags $1.2B Mega Cloud Modernization Deal from Leading European Banking Group",
+              "source": "CNBC-TV18",
+              "impact": "BULLISH",
+              "summary": "Multi-year engagement to deploy hybrid cloud, AI copilots, and core banking infrastructure transformation across 12 countries.",
+              "category": "PRODUCT"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 227,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788579713087,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        },
+        "INFY": {
+          "symbol": "INFY",
+          "name": "Infosys Limited",
+          "price": 1942.8,
+          "open": 1885,
+          "high": 1971.9419999999998,
+          "low": 1862.3799999999999,
+          "volume": 3770000,
+          "avgVolume": 5800000,
+          "peRatio": 28.2,
+          "marketCap": 8060000000000,
+          "rsi14": 63.8,
+          "macd": {
+            "value": 4.62,
+            "signal": 3.47,
+            "histogram": 1.16
+          },
+          "sparkline": [
+            1891.36,
+            1891.89,
+            1899.04,
+            1899.62,
+            1901.7,
+            1908.64,
+            1912.5,
+            1910.7,
+            1914.23,
+            1917.16,
+            1917.98,
+            1919.25,
+            1918.92,
+            1925.73,
+            1926.22,
+            1930.12,
+            1930.35,
+            1936.46,
+            1934.46,
+            1942.8
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-infy-1",
+              "symbol": "INFY",
+              "timestamp": 1788578032961,
+              "headline": "Infosys Raises FY26 Constant Currency Revenue Growth Guidance to 4.5% - 5.0%",
+              "source": "Moneycontrol",
+              "impact": "BULLISH",
+              "summary": "Strong digital AI deals and Topaz generative AI suite expansion drove quarterly large deal TCV of $3.2 billion.",
+              "category": "EARNINGS"
+            },
+            {
+              "id": "cat-infy-2",
+              "symbol": "INFY",
+              "timestamp": 1788565312961,
+              "headline": "Nomura Upgrades Infosys to Buy with Price Target of ₹2,150 on Margin Recovery",
+              "source": "The Economic Times",
+              "impact": "BULLISH",
+              "summary": "Brokerage highlights accelerating BFSI discretionary IT spend and operational efficiency gains.",
+              "category": "ANALYST"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 227,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788579713087,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        }
+      },
+      "isSyntheticColdStart": false
     }
   ],
   "userLastSeen": {
-    "test_multi_user_1788577060676:wl-tech-test_multi_user_1788577060676": "snap-1788577060681-mhh6n"
+    "test_multi_user_1788577060676:wl-tech-test_multi_user_1788577060676": "snap-1788577060681-mhh6n",
+    "test_multi_user_1788578653773:wl-tech-test_multi_user_1788578653773": "snap-1788578653782-dbg5e",
+    "test_multi_user_1788578667036:wl-tech-test_multi_user_1788578667036": "snap-1788578667042-t30qc",
+    "test_multi_user_1788578860951:wl-tech-test_multi_user_1788578860951": "snap-1788578860958-318tk",
+    "test_multi_user_1788579181238:wl-tech-test_multi_user_1788579181238": "snap-1788579181245-wlc9c",
+    "test_multi_user_1788579631409:wl-tech-test_multi_user_1788579631409": "snap-1788579631415-rvwal",
+    "test_multi_user_1788579713309:wl-tech-test_multi_user_1788579713309": "snap-1788579713314-54twt"
   }
 }

@@ -4,10 +4,12 @@ import {
   FreshnessLevel,
   ConfidenceLevel,
   CatalystEvent,
+  DataSourceStatus,
 } from '../types/market.js';
 import { INITIAL_MOCK_TICKERS, MockTickerDefinition } from '../data/mockTickers.js';
 import { INITIAL_MOCK_CATALYSTS } from '../data/mockCatalysts.js';
 import { config } from '../config.js';
+import { liveMarketDataService } from './liveMarketDataService.js';
 
 interface TickerInternalRecord {
   definition: MockTickerDefinition;
@@ -137,6 +139,81 @@ export class MarketDataService {
     }
   }
 
+  // Track active data source status
+  private lastDataSourceStatus: DataSourceStatus | null = null;
+
+  public getLastDataSourceStatus(): DataSourceStatus {
+    const override = liveMarketDataService.getSimulationOverride();
+    const isHours = liveMarketDataService.isNseMarketOpen();
+    if (override) {
+      const isLive = override === 'LIVE_STREAM';
+      const meta = liveMarketDataService.getStatusMetadata(override, isHours);
+      return {
+        isLive,
+        reason: override,
+        label: meta.label,
+        description: meta.description,
+        asOf: Date.now(),
+        isMarketHours: isHours,
+      };
+    }
+
+    if (this.lastDataSourceStatus) return this.lastDataSourceStatus;
+    const meta = liveMarketDataService.getStatusMetadata(
+      config.liveData.enabled ? (isHours ? 'LIVE_STREAM' : 'MARKET_CLOSED') : 'SYNTHETIC_MODE',
+      isHours
+    );
+    return {
+      isLive: config.liveData.enabled && isHours,
+      reason: config.liveData.enabled ? (isHours ? 'LIVE_STREAM' : 'MARKET_CLOSED') : 'SYNTHETIC_MODE',
+      label: meta.label,
+      description: meta.description,
+      asOf: Date.now(),
+      isMarketHours: isHours,
+    };
+  }
+
+  public async syncWithLiveData(symbols?: string[]): Promise<DataSourceStatus> {
+    const targetSymbols = symbols && symbols.length > 0
+      ? symbols
+      : Array.from(this.tickers.keys());
+
+    try {
+      const { quotes, status } = await liveMarketDataService.fetchLiveQuotes(targetSymbols);
+      this.lastDataSourceStatus = status;
+
+      // Apply real market quotes if available
+      for (const [sym, q] of Object.entries(quotes)) {
+        const record = this.tickers.get(sym.toUpperCase());
+        if (record && !record.isManualStaleOverride) {
+          record.primaryPrice = q.price;
+          record.open = q.open || record.open;
+          record.high = Math.max(record.high, q.high || q.price);
+          record.low = Math.min(record.low, q.low || q.price);
+          record.volume = q.volume || record.volume;
+          record.lastUpdatedTimestamp = q.fetchedAt || Date.now();
+          record.sparkline.push(q.price);
+          if (record.sparkline.length > 25) record.sparkline.shift();
+        }
+      }
+
+      return status;
+    } catch {
+      const isHours = liveMarketDataService.isNseMarketOpen();
+      const meta = liveMarketDataService.getStatusMetadata('SOURCE_UNAVAILABLE', isHours);
+      const fallbackStatus: DataSourceStatus = {
+        isLive: false,
+        reason: 'SOURCE_UNAVAILABLE',
+        label: meta.label,
+        description: meta.description,
+        asOf: Date.now(),
+        isMarketHours: isHours,
+      };
+      this.lastDataSourceStatus = fallbackStatus;
+      return fallbackStatus;
+    }
+  }
+
   public getTickerState(symbol: string): TickerState | null {
     const upper = symbol.toUpperCase();
     const record = this.tickers.get(upper);
@@ -170,13 +247,23 @@ export class MarketDataService {
       confidenceLevel = 'MEDIUM';
     }
 
+    const currentStatus = this.getLastDataSourceStatus();
+    const primaryProvider = currentStatus.isLive
+      ? 'National Stock Exchange (NSE Live)'
+      : 'Deterministic Synthetic Sim';
+    const secondaryProvider = currentStatus.isLive
+      ? 'Bombay Stock Exchange (BSE)'
+      : 'BSE Parallel Sim';
+
     const confidence: DataSourceConfidence = {
       level: confidenceLevel,
       isDivergent,
       divergencePercent,
-      primaryProvider: 'Finnhub Market Stream',
-      secondaryProvider: 'Cboe BZX Fallback',
+      primaryProvider,
+      secondaryProvider,
       asOf: effectiveTimestamp,
+      dataSourceReason: currentStatus.reason,
+      isLiveData: currentStatus.isLive,
     };
 
     // Filter catalysts related to this symbol
@@ -316,11 +403,36 @@ export class MarketDataService {
     record.secondaryPrice = parseFloat((record.primaryPrice * 1.001).toFixed(2));
     record.high = Math.max(record.high, record.primaryPrice);
     record.low = Math.min(record.low, record.primaryPrice);
+    record.sparkline.push(record.primaryPrice);
+    if (record.sparkline.length > 25) record.sparkline.shift();
     record.lastUpdatedTimestamp = Date.now();
     return this.getTickerState(symbol);
   }
 
+  public triggerCorrelationBreak(symbolA = 'INFY', symbolB = 'TCS', spreadShift = 5.2) {
+    const recA = this.tickers.get(symbolA.toUpperCase());
+    const recB = this.tickers.get(symbolB.toUpperCase());
+    if (!recA || !recB) return null;
+
+    // Apply asymmetric movement: symbolA advances +spreadShift%, symbolB stays flat / slight dip
+    recA.primaryPrice = parseFloat((recA.primaryPrice * (1 + spreadShift / 100)).toFixed(2));
+    recA.high = Math.max(recA.high, recA.primaryPrice);
+    recA.volume += Math.floor(recA.definition.avgVolume * 0.4);
+    recA.sparkline.push(recA.primaryPrice);
+    recA.lastUpdatedTimestamp = Date.now();
+
+    recB.primaryPrice = parseFloat((recB.primaryPrice * 0.998).toFixed(2));
+    recB.sparkline.push(recB.primaryPrice);
+    recB.lastUpdatedTimestamp = Date.now();
+
+    return {
+      tickerA: this.getTickerState(symbolA),
+      tickerB: this.getTickerState(symbolB),
+    };
+  }
+
   public resetAllOverrides() {
+    liveMarketDataService.setSimulationOverride(null);
     for (const record of this.tickers.values()) {
       record.isManualStaleOverride = false;
       record.manualStaleTimestamp = undefined;
