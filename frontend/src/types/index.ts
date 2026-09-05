@@ -44,9 +44,19 @@ export interface TickerState {
   confidence: DataSourceConfidence;
 }
 
+export interface UserWatchlist {
+  id: string;
+  userId: string;
+  name: string;
+  symbols: string[];
+  createdAt: number;
+  updatedAt: number;
+}
+
 export interface WatchlistSnapshot {
   id: string;
   userId: string;
+  watchlistId?: string;
   name: string;
   timestamp: number;
   isSyntheticColdStart?: boolean;

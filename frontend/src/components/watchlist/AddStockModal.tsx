@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { SearchResult } from '../../types';
 import { searchSymbols } from '../../services/api';
+import { formatINR } from '../../utils/formatters';
 import { Search, X, Plus, Check } from 'lucide-react';
 
 interface AddStockModalProps {
@@ -82,7 +83,7 @@ export const AddStockModal: React.FC<AddStockModalProps> = ({
           <Search size={16} className="modal-search-icon" />
           <input
             type="text"
-            placeholder="Search by symbol or company name (e.g. AMD, Meta, Crypto)..."
+            placeholder="Search by symbol or company name (e.g. RELIANCE, TCS, INFY, Crypto)..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             autoFocus
@@ -109,7 +110,7 @@ export const AddStockModal: React.FC<AddStockModalProps> = ({
                     <span className="result-sector">{item.sector}</span>
                   </div>
                   <div className="result-action">
-                    <span className="result-price mono">${item.price.toFixed(2)}</span>
+                    <span className="result-price mono">{formatINR(item.price)}</span>
                     <button
                       type="button"
                       className={`btn-add-result ${isAlreadyAdded ? 'added' : ''}`}

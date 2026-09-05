@@ -1,5 +1,6 @@
 import React from 'react';
 import { WatchlistDiffReport } from '../../types';
+import { formatDeltaINR } from '../../utils/formatters';
 import {
   TrendingUp,
   TrendingDown,
@@ -104,7 +105,7 @@ export const DiffSummaryHero: React.FC<DiffSummaryHeroProps> = ({
             <div className="metric-subtext truncate">
               {report.topGainer.newCatalysts.length > 0
                 ? report.topGainer.newCatalysts[0].headline
-                : `Advanced +$${report.topGainer.priceDelta.toFixed(2)}`}
+                : `Advanced ${formatDeltaINR(report.topGainer.priceDelta)}`}
             </div>
           </div>
         )}
@@ -120,7 +121,7 @@ export const DiffSummaryHero: React.FC<DiffSummaryHeroProps> = ({
             <div className="metric-subtext truncate">
               {report.topLoser.newCatalysts.length > 0
                 ? report.topLoser.newCatalysts[0].headline
-                : `Declined -$${Math.abs(report.topLoser.priceDelta).toFixed(2)}`}
+                : `Declined ${formatDeltaINR(report.topLoser.priceDelta)}`}
             </div>
           </div>
         )}

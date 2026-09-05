@@ -46,9 +46,19 @@ export interface TickerState {
   confidence: DataSourceConfidence;
 }
 
+export interface UserWatchlist {
+  id: string;
+  userId: string;
+  name: string;
+  symbols: string[];
+  createdAt: number;
+  updatedAt: number;
+}
+
 export interface WatchlistSnapshot {
   id: string;
   userId: string;
+  watchlistId?: string; // Scoped watchlist ID for multi-watchlist isolation
   name: string; // e.g. "Today's Market Open (09:30 AM)", "Pre-CPI Release", "Session Close"
   timestamp: number;
   isSyntheticColdStart?: boolean; // Set to true if generated from fallback baseline

@@ -7,16 +7,17 @@ const router = Router();
 // GET /api/snapshots - List all snapshots
 router.get('/', (req: Request, res: Response) => {
   const userId = (req.query.userId as string) || 'default_user';
-  const list = snapshotService.listSnapshots(userId);
+  const watchlistId = req.query.watchlistId as string | undefined;
+  const list = snapshotService.listSnapshots(userId, watchlistId);
   res.json({ snapshots: list });
 });
 
 // POST /api/snapshots/commit - Commit a new snapshot
 router.post('/commit', (req: Request, res: Response) => {
-  const { name, userId = 'default_user', baselineType = 'USER_COMMIT' } = req.body;
-  const symbols = watchlistService.getWatchlist(userId);
+  const { name, userId = 'default_user', baselineType = 'USER_COMMIT', watchlistId } = req.body;
+  const symbols = watchlistService.getWatchlist(userId, watchlistId);
 
-  const snapshot = snapshotService.commitSnapshot(symbols, name, baselineType, userId);
+  const snapshot = snapshotService.commitSnapshot(symbols, name, baselineType, userId, watchlistId);
   res.status(201).json({
     message: 'Checkpoint successfully committed',
     snapshot,
@@ -38,7 +39,8 @@ router.get('/:id', (req: Request, res: Response) => {
 router.delete('/:id', (req: Request, res: Response) => {
   const { id } = req.params;
   const userId = (req.query.userId as string) || 'default_user';
-  const success = snapshotService.deleteSnapshot(id, userId);
+  const watchlistId = req.query.watchlistId as string | undefined;
+  const success = snapshotService.deleteSnapshot(id, userId, watchlistId);
   if (!success) {
     res.status(404).json({ error: 'Snapshot not found' });
     return;

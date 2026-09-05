@@ -196,7 +196,7 @@ export class DiffEngine {
     // Cold-start messaging
     let coldStartMessage: string | undefined;
     if (isColdStart) {
-      coldStartMessage = "First visit detected — showing movements since Today's Market Open (09:30 AM). Click 'Commit Checkpoint' anytime to establish a new baseline.";
+      coldStartMessage = `First visit detected — showing movements since ${baseSnapshot.name || "Today's Market Open (09:15 AM)"}. Click 'Commit Checkpoint' anytime to establish a new baseline.`;
     }
 
     return {
@@ -287,9 +287,9 @@ export class DiffEngine {
 
     // Direction & Move
     if (percentDelta > 0) {
-      parts.push(`Advanced +$${priceDelta.toFixed(2)} (+${percentDelta}%)`);
+      parts.push(`Advanced +₹${priceDelta.toFixed(2)} (+${percentDelta}%)`);
     } else if (percentDelta < 0) {
-      parts.push(`Declined -$${Math.abs(priceDelta).toFixed(2)} (${percentDelta}%)`);
+      parts.push(`Declined -₹${Math.abs(priceDelta).toFixed(2)} (${percentDelta}%)`);
     } else {
       parts.push(`Unchanged at current levels`);
     }

@@ -97,4 +97,18 @@ router.post('/simulate/shock', (req: Request, res: Response) => {
   res.json({ message: `Price shock of ${percentShift}% applied to ${symbol}`, ticker: updated });
 });
 
+// POST /api/market/simulate/ai-failure
+router.post('/simulate/ai-failure', async (req: Request, res: Response) => {
+  const { failed = true } = req.body;
+  const { aiNarratorService } = await import('../services/aiNarratorService.js');
+  aiNarratorService.setFailureSimulation(!!failed);
+  res.json({ message: `AI failure simulation set to ${!!failed}`, simulateFailure: aiNarratorService.getFailureSimulation() });
+});
+
+// POST /api/market/simulate/reset
+router.post('/simulate/reset', (_req: Request, res: Response) => {
+  marketDataService.resetAllOverrides();
+  res.json({ message: 'All market feed overrides reset to live nominal stream' });
+});
+
 export default router;

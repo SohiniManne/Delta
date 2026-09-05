@@ -317,8 +317,18 @@ export class MarketDataService {
     record.high = Math.max(record.high, record.primaryPrice);
     record.low = Math.min(record.low, record.primaryPrice);
     record.lastUpdatedTimestamp = Date.now();
-    record.sparkline.push(record.primaryPrice);
     return this.getTickerState(symbol);
+  }
+
+  public resetAllOverrides() {
+    for (const record of this.tickers.values()) {
+      record.isManualStaleOverride = false;
+      record.manualStaleTimestamp = undefined;
+      record.isManualDivergenceOverride = false;
+      record.manualDivergencePercent = undefined;
+      record.lastUpdatedTimestamp = Date.now();
+      record.secondaryPrice = record.primaryPrice;
+    }
   }
 }
 

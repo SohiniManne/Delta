@@ -87,7 +87,7 @@ export class SnapshotService {
         confidence: {
           level: 'HIGH',
           isDivergent: false,
-          primaryProvider: 'NYSE / NASDAQ EOD Final',
+          primaryProvider: 'NSE / BSE Official EOD Final',
           asOf: yesterdayClose,
         },
       };
@@ -96,7 +96,7 @@ export class SnapshotService {
     const ySnapshot: WatchlistSnapshot = {
       id: 'snap-yesterday-close',
       userId: 'default_user',
-      name: "Yesterday's Market Close (04:00 PM)",
+      name: "Yesterday's Market Close (03:30 PM)",
       timestamp: yesterdayClose,
       baselineType: 'PREVIOUS_CLOSE',
       tickers: yTickers,
@@ -127,7 +127,7 @@ export class SnapshotService {
         confidence: {
           level: 'HIGH',
           isDivergent: false,
-          primaryProvider: 'Finnhub Market Stream',
+          primaryProvider: 'NSE Realtime Market Stream',
           asOf: fourHoursAgo,
         },
       };
@@ -149,19 +149,20 @@ export class SnapshotService {
 
   /**
    * Explicit Cold-Start Handler:
-   * When a user has never committed a snapshot, synthesize either:
-   * - "Today's Market Open (09:30 AM)" if regular trading hours
-   * - "Previous Day Close (04:00 PM)" if pre-market (before 09:30 AM EST)
+   * When a user has never committed a snapshot for this watchlist, synthesize either:
+   * - "Today's Market Open (09:15 AM)" if regular trading hours
+   * - "Previous Day Close (03:30 PM)" if pre-market (before 09:15 AM IST)
    */
   public getSyntheticColdStartBaseline(
     symbols: string[],
     userId = 'default_user',
-    forceBaseline?: 'TODAY_OPEN' | 'PREVIOUS_CLOSE'
+    forceBaseline?: 'TODAY_OPEN' | 'PREVIOUS_CLOSE',
+    watchlistId?: string
   ): WatchlistSnapshot {
     const now = new Date();
-    // Check if pre-market (before 9:30 AM)
+    // Check if pre-market (before 9:15 AM)
     const isPreMarket = forceBaseline === 'PREVIOUS_CLOSE' || (
-      forceBaseline === undefined && (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 30))
+      forceBaseline === undefined && (now.getHours() < 9 || (now.getHours() === 9 && now.getMinutes() < 15))
     );
 
     const baselineType: BaselineType = isPreMarket ? 'PREVIOUS_CLOSE' : 'TODAY_OPEN';
@@ -172,14 +173,14 @@ export class SnapshotService {
     if (baselineType === 'PREVIOUS_CLOSE') {
       const prevCloseTime = new Date();
       prevCloseTime.setDate(prevCloseTime.getDate() - 1);
-      prevCloseTime.setHours(16, 0, 0, 0);
+      prevCloseTime.setHours(15, 30, 0, 0);
       timestamp = prevCloseTime.getTime();
-      name = "Previous Day Close (04:00 PM)";
+      name = "Previous Day Close (03:30 PM)";
     } else {
       const openTime = new Date();
-      openTime.setHours(9, 30, 0, 0);
+      openTime.setHours(9, 15, 0, 0);
       timestamp = openTime.getTime() > Date.now() ? Date.now() - 3 * 3600 * 1000 : openTime.getTime();
-      name = "Today's Market Open (09:30 AM)";
+      name = "Today's Market Open (09:15 AM)";
     }
 
     const tickers: Record<string, TickerState> = {};
@@ -219,7 +220,7 @@ export class SnapshotService {
         confidence: {
           level: 'HIGH',
           isDivergent: false,
-          primaryProvider: baselineType === 'PREVIOUS_CLOSE' ? 'NYSE / NASDAQ EOD Official' : 'Official Exchange Opening Auction',
+          primaryProvider: baselineType === 'PREVIOUS_CLOSE' ? 'NSE / BSE Official EOD' : 'NSE Official Opening Auction',
           asOf: timestamp,
         },
       };
@@ -228,6 +229,7 @@ export class SnapshotService {
     return {
       id: `snap-synthetic-${baselineType.toLowerCase()}-${timestamp}`,
       userId,
+      watchlistId,
       name,
       timestamp,
       isSyntheticColdStart: true,
@@ -237,15 +239,17 @@ export class SnapshotService {
   }
 
   /**
-   * Retrieve the base snapshot for a user.
-   * If user has a last-seen snapshot, returns it.
+   * Retrieve the base snapshot for a specific user and watchlist.
+   * If user has a last-seen snapshot for this watchlist, returns it.
    * If cold-start (no last-seen), returns synthesized Market Open baseline.
    */
-  public getLastSeenOrColdStartBaseline(symbols: string[], userId = 'default_user'): {
+  public getLastSeenOrColdStartBaseline(symbols: string[], userId = 'default_user', watchlistId?: string): {
     snapshot: WatchlistSnapshot;
     isColdStart: boolean;
   } {
-    const lastSeenId = this.userLastSeenMap.get(userId);
+    const key = watchlistId ? `${userId}:${watchlistId}` : userId;
+    let lastSeenId = this.userLastSeenMap.get(key);
+
     if (lastSeenId && this.snapshots.has(lastSeenId)) {
       const found = this.snapshots.get(lastSeenId)!;
       // Ensure all current watchlist symbols are represented in snapshot
@@ -269,8 +273,8 @@ export class SnapshotService {
       };
     }
 
-    // Cold-start fallback!
-    const synthetic = this.getSyntheticColdStartBaseline(symbols, userId);
+    // Cold-start fallback for this watchlist
+    const synthetic = this.getSyntheticColdStartBaseline(symbols, userId, undefined, watchlistId);
     return {
       snapshot: synthetic,
       isColdStart: true,
@@ -278,13 +282,14 @@ export class SnapshotService {
   }
 
   /**
-   * Commit current live market state as a new checkpoint.
+   * Commit current live market state as a new checkpoint for a specific watchlist.
    */
   public commitSnapshot(
     symbols: string[],
     name?: string,
     baselineType: BaselineType = 'USER_COMMIT',
-    userId = 'default_user'
+    userId = 'default_user',
+    watchlistId?: string
   ): WatchlistSnapshot {
     const now = Date.now();
     const liveStates = marketDataService.getAllTickerStates(symbols);
@@ -295,6 +300,7 @@ export class SnapshotService {
     const snapshot: WatchlistSnapshot = {
       id: snapshotId,
       userId,
+      watchlistId,
       name: customName,
       timestamp: now,
       baselineType,
@@ -303,31 +309,37 @@ export class SnapshotService {
     };
 
     this.snapshots.set(snapshotId, snapshot);
-    this.userLastSeenMap.set(userId, snapshotId);
+
+    const key = watchlistId ? `${userId}:${watchlistId}` : userId;
+    this.userLastSeenMap.set(key, snapshotId);
     this.saveToDisk();
 
     return snapshot;
   }
 
   /**
-   * Acknowledge / Mark as Seen: Updates user's last-seen snapshot to a new live snapshot
+   * Acknowledge / Mark as Seen: Updates user's last-seen snapshot for this watchlist
    */
-  public acknowledgeCurrentState(symbols: string[], userId = 'default_user'): WatchlistSnapshot {
-    return this.commitSnapshot(symbols, 'Acknowledged Checkpoint', 'USER_COMMIT', userId);
+  public acknowledgeCurrentState(symbols: string[], userId = 'default_user', watchlistId?: string): WatchlistSnapshot {
+    return this.commitSnapshot(symbols, 'Acknowledged Checkpoint', 'USER_COMMIT', userId, watchlistId);
   }
 
   public getSnapshotById(id: string): WatchlistSnapshot | null {
     return this.snapshots.get(id) || null;
   }
 
-  public listSnapshots(userId = 'default_user'): Array<Omit<WatchlistSnapshot, 'tickers'> & { tickerCount: number }> {
+  public listSnapshots(userId = 'default_user', watchlistId?: string): Array<Omit<WatchlistSnapshot, 'tickers'> & { tickerCount: number }> {
     const list: Array<Omit<WatchlistSnapshot, 'tickers'> & { tickerCount: number }> = [];
 
     for (const snap of this.snapshots.values()) {
-      if (snap.userId === userId || snap.userId === 'default_user') {
+      const matchesUser = snap.userId === userId || snap.userId === 'default_user';
+      const matchesWatchlist = !watchlistId || !snap.watchlistId || snap.watchlistId === watchlistId;
+
+      if (matchesUser && matchesWatchlist) {
         list.push({
           id: snap.id,
           userId: snap.userId,
+          watchlistId: snap.watchlistId,
           name: snap.name,
           timestamp: snap.timestamp,
           baselineType: snap.baselineType,
@@ -341,11 +353,15 @@ export class SnapshotService {
     return list.sort((a, b) => b.timestamp - a.timestamp);
   }
 
-  public deleteSnapshot(id: string, userId = 'default_user'): boolean {
+  public deleteSnapshot(id: string, userId = 'default_user', watchlistId?: string): boolean {
     const snap = this.snapshots.get(id);
     if (!snap) return false;
 
     this.snapshots.delete(id);
+    const key = watchlistId ? `${userId}:${watchlistId}` : userId;
+    if (this.userLastSeenMap.get(key) === id) {
+      this.userLastSeenMap.delete(key);
+    }
     if (this.userLastSeenMap.get(userId) === id) {
       this.userLastSeenMap.delete(userId);
     }
@@ -355,3 +371,4 @@ export class SnapshotService {
 }
 
 export const snapshotService = new SnapshotService();
+

@@ -10,16 +10,18 @@ const router = Router();
 // GET /api/diff/last-seen - Structured diff against last-seen snapshot (or cold-start Open)
 router.get('/last-seen', async (req: Request, res: Response) => {
   const userId = (req.query.userId as string) || 'default_user';
-  const symbols = watchlistService.getWatchlist(userId);
+  const watchlistId = req.query.watchlistId as string | undefined;
+  const symbols = watchlistService.getWatchlist(userId, watchlistId);
 
   // 1. Get base snapshot (either saved last-seen or synthesized Today's Market Open)
-  const { snapshot: baseSnapshot, isColdStart } = snapshotService.getLastSeenOrColdStartBaseline(symbols, userId);
+  const { snapshot: baseSnapshot, isColdStart } = snapshotService.getLastSeenOrColdStartBaseline(symbols, userId, watchlistId);
 
   // 2. Build live target snapshot
   const liveTickers = marketDataService.getAllTickerStates(symbols);
   const targetSnapshot: WatchlistSnapshot = {
     id: 'live',
     userId,
+    watchlistId,
     name: 'Current Live State',
     timestamp: Date.now(),
     baselineType: 'USER_COMMIT',
@@ -34,6 +36,7 @@ router.get('/last-seen', async (req: Request, res: Response) => {
 // GET /api/diff/compare - Compare any two arbitrary snapshots
 router.get('/compare', async (req: Request, res: Response) => {
   const userId = (req.query.userId as string) || 'default_user';
+  const watchlistId = req.query.watchlistId as string | undefined;
   const baseId = req.query.baseId as string;
   const targetId = (req.query.targetId as string) || 'live';
 
@@ -42,19 +45,19 @@ router.get('/compare', async (req: Request, res: Response) => {
     return;
   }
 
-  const symbols = watchlistService.getWatchlist(userId);
+  const symbols = watchlistService.getWatchlist(userId, watchlistId);
 
   // Retrieve base
   let baseSnapshot: WatchlistSnapshot | null = null;
   const upperBase = baseId.toUpperCase();
 
   if (upperBase === 'LAST_SEEN' || upperBase === 'LAST-SEEN' || upperBase === 'LAST_VISIT') {
-    const { snapshot } = snapshotService.getLastSeenOrColdStartBaseline(symbols, userId);
+    const { snapshot } = snapshotService.getLastSeenOrColdStartBaseline(symbols, userId, watchlistId);
     baseSnapshot = snapshot;
   } else if (upperBase === 'TODAY_OPEN' || upperBase === 'TODAY-OPEN' || baseId.startsWith('snap-synthetic-open')) {
-    baseSnapshot = snapshotService.getSyntheticColdStartBaseline(symbols, userId, 'TODAY_OPEN');
+    baseSnapshot = snapshotService.getSyntheticColdStartBaseline(symbols, userId, 'TODAY_OPEN', watchlistId);
   } else if (upperBase === 'PREVIOUS_CLOSE' || upperBase === 'YESTERDAY_CLOSE' || upperBase === 'YESTERDAY-CLOSE' || baseId === 'snap-yesterday-close') {
-    baseSnapshot = snapshotService.getSnapshotById('snap-yesterday-close') || snapshotService.getSyntheticColdStartBaseline(symbols, userId, 'PREVIOUS_CLOSE');
+    baseSnapshot = snapshotService.getSnapshotById('snap-yesterday-close') || snapshotService.getSyntheticColdStartBaseline(symbols, userId, 'PREVIOUS_CLOSE', watchlistId);
   } else {
     baseSnapshot = snapshotService.getSnapshotById(baseId);
   }
@@ -71,6 +74,7 @@ router.get('/compare', async (req: Request, res: Response) => {
     targetSnapshot = {
       id: 'live',
       userId,
+      watchlistId,
       name: 'Current Live State',
       timestamp: Date.now(),
       baselineType: 'USER_COMMIT',
@@ -91,10 +95,10 @@ router.get('/compare', async (req: Request, res: Response) => {
 
 // POST /api/diff/acknowledge - "Catch Up / Mark Seen" action
 router.post('/acknowledge', async (req: Request, res: Response) => {
-  const { userId = 'default_user' } = req.body;
-  const symbols = watchlistService.getWatchlist(userId);
+  const { userId = 'default_user', watchlistId } = req.body;
+  const symbols = watchlistService.getWatchlist(userId, watchlistId);
 
-  const newSnapshot = snapshotService.acknowledgeCurrentState(symbols, userId);
+  const newSnapshot = snapshotService.acknowledgeCurrentState(symbols, userId, watchlistId);
 
   // Return fresh zero-delta report
   const report = await diffEngine.computeDiff(newSnapshot, newSnapshot, false);

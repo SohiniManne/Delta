@@ -3,6 +3,11 @@ import { TickerDiff, TickerState } from '../../types';
 import { Sparkline } from '../common/Sparkline';
 import { FreshnessIndicator } from '../diff/FreshnessIndicator';
 import {
+  formatINR,
+  formatDeltaINR,
+  formatPercentDelta,
+} from '../../utils/formatters';
+import {
   TrendingUp,
   TrendingDown,
   Trash2,
@@ -17,6 +22,8 @@ import {
 interface WatchlistTableProps {
   diffs: TickerDiff[];
   liveTickers?: Record<string, TickerState>;
+  selectedSymbol?: string | null;
+  onSelectSymbol?: (symbol: string) => void;
   onRemoveSymbol: (symbol: string) => Promise<void>;
   onOpenAddModal: () => void;
   isRemoving?: string | null;
@@ -25,6 +32,8 @@ interface WatchlistTableProps {
 export const WatchlistTable: React.FC<WatchlistTableProps> = ({
   diffs,
   liveTickers = {},
+  selectedSymbol,
+  onSelectSymbol,
   onRemoveSymbol,
   onOpenAddModal,
   isRemoving,
@@ -43,16 +52,29 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
       d.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const toggleExpand = (symbol: string) => {
+  const handleRowClick = (symbol: string) => {
+    if (onSelectSymbol) {
+      onSelectSymbol(symbol);
+    }
+  };
+
+  const toggleExpand = (e: React.MouseEvent, symbol: string) => {
+    e.stopPropagation();
     setExpandedSymbol(expandedSymbol === symbol ? null : symbol);
+    if (onSelectSymbol) {
+      onSelectSymbol(symbol);
+    }
   };
 
   return (
-    <div className="watchlist-section-card">
+    <div className="watchlist-section-card compact-terminal-card">
       {/* Table Header Controls */}
       <div className="watchlist-controls-bar">
         <div className="controls-left">
-          <h3 className="section-heading">Watchlist State & Diff Engine</h3>
+          <div className="controls-title-stack">
+            <h3 className="section-heading">MARKET DIFF MATRIX</h3>
+            <span className="section-subtext">Real-time delta telemetry vs. checkpoint baseline</span>
+          </div>
           <span className="ticker-count-badge">{diffs.length} Tracked</span>
         </div>
 
@@ -65,7 +87,7 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
             className="search-input"
           />
           <button type="button" className="btn-add-stock" onClick={onOpenAddModal}>
-            <Plus size={15} />
+            <Plus size={14} />
             <span>Add Symbol</span>
           </button>
         </div>
@@ -73,17 +95,17 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
 
       {/* Main Table */}
       <div className="table-responsive">
-        <table className="watchlist-table">
+        <table className="watchlist-table compact-table">
           <thead>
             <tr>
               <th className="th-asset">Asset</th>
               <th className="th-price">Live Price</th>
               <th className="th-base">Base Price</th>
-              <th className="th-delta">Shift ($\Delta$)</th>
+              <th className="th-delta">₹Δ (Shift)</th>
               <th className="th-delta-pct">% Delta</th>
               <th className="th-sparkline">Trend</th>
               <th className="th-signals">Technical Signals</th>
-              <th className="th-freshness">Data Feed Status</th>
+              <th className="th-freshness">Data Feed</th>
               <th className="th-actions"></th>
             </tr>
           </thead>
@@ -98,6 +120,7 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
               filteredDiffs.map((item) => {
                 const live = liveTickers[item.symbol];
                 const isExpanded = expandedSymbol === item.symbol;
+                const isSelected = selectedSymbol === item.symbol;
                 const isPositive = item.percentDelta >= 0;
 
                 const confidence = item.confidence || live?.confidence || {
@@ -113,26 +136,22 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
 
                 // Price display with approximation tilde for degraded precision
                 const displayPrice = isDegraded
-                  ? `~$${item.targetPrice.toFixed(isDivergent ? 1 : 2)}`
-                  : `$${item.targetPrice.toFixed(2)}`;
+                  ? `~${formatINR(item.targetPrice, isDivergent ? 1 : 2)}`
+                  : formatINR(item.targetPrice);
 
-                const displayDelta = isDegraded
-                  ? `~${isPositive ? '+' : ''}$${item.priceDelta.toFixed(1)}`
-                  : `${isPositive ? '+' : ''}$${item.priceDelta.toFixed(2)}`;
-
-                const displayPercent = isDegraded
-                  ? `~${isPositive ? '+' : ''}${item.percentDelta.toFixed(1)}%`
-                  : `${isPositive ? '+' : ''}${item.percentDelta.toFixed(2)}%`;
+                const displayDelta = formatDeltaINR(item.priceDelta, isDegraded);
+                const displayPercent = formatPercentDelta(item.percentDelta, isDegraded);
 
                 return (
                   <React.Fragment key={item.symbol}>
                     <tr
                       className={`table-row ${isExpanded ? 'row-expanded' : ''} ${
-                        isDegraded ? 'row-degraded' : ''
-                      } ${isStale ? 'row-stale' : ''}`}
+                        isSelected ? 'row-selected' : ''
+                      } ${isDegraded ? 'row-degraded' : ''} ${isStale ? 'row-stale' : ''}`}
+                      onClick={() => handleRowClick(item.symbol)}
                     >
                       {/* 1. Asset Info */}
-                      <td className="td-asset" onClick={() => toggleExpand(item.symbol)}>
+                      <td className="td-asset">
                         <div className="asset-cell">
                           <span className="asset-symbol mono">{item.symbol}</span>
                           <span className="asset-name">{item.name}</span>
@@ -140,7 +159,7 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
                       </td>
 
                       {/* 2. Live Price (Degraded styling if stale/divergent) */}
-                      <td className="td-price mono" onClick={() => toggleExpand(item.symbol)}>
+                      <td className="td-price mono">
                         <div className={`price-cell ${isDegraded ? 'price-degraded' : ''}`}>
                           <span className="price-val">{displayPrice}</span>
                           {isDegraded && (
@@ -152,19 +171,19 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
                       </td>
 
                       {/* 3. Base Checkpoint Price */}
-                      <td className="td-base mono" onClick={() => toggleExpand(item.symbol)}>
-                        <span className="base-price-val">${item.basePrice.toFixed(2)}</span>
+                      <td className="td-base mono">
+                        <span className="base-price-val">{formatINR(item.basePrice)}</span>
                       </td>
 
                       {/* 4. Shift Delta */}
-                      <td className="td-delta mono" onClick={() => toggleExpand(item.symbol)}>
+                      <td className="td-delta mono">
                         <span className={`delta-val ${isPositive ? 'positive' : 'negative'} ${isDegraded ? 'degraded-text' : ''}`}>
                           {displayDelta}
                         </span>
                       </td>
 
                       {/* 5. % Delta Pill */}
-                      <td className="td-delta-pct" onClick={() => toggleExpand(item.symbol)}>
+                      <td className="td-delta-pct">
                         <div
                           className={`delta-pill ${
                             isStale
@@ -174,17 +193,17 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
                               : 'pill-negative'
                           }`}
                         >
-                          {isPositive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+                          {isPositive ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
                           <span className="mono">{displayPercent}</span>
                         </div>
                       </td>
 
                       {/* 6. Sparkline (Dashed if stale/degraded) */}
-                      <td className="td-sparkline" onClick={() => toggleExpand(item.symbol)}>
+                      <td className="td-sparkline">
                         <Sparkline
                           data={item.sparkline}
-                          width={95}
-                          height={26}
+                          width={85}
+                          height={22}
                           isDegraded={isDegraded}
                           freshness={isStale ? 'STALE' : item.targetFreshness}
                           percentDelta={item.percentDelta}
@@ -192,7 +211,7 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
                       </td>
 
                       {/* 7. Technical Signals */}
-                      <td className="td-signals" onClick={() => toggleExpand(item.symbol)}>
+                      <td className="td-signals">
                         <div className="signals-group">
                           {/* Live RSI Reading */}
                           {live && (
@@ -257,19 +276,22 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
                           <button
                             type="button"
                             className="btn-icon"
-                            onClick={() => toggleExpand(item.symbol)}
+                            onClick={(e) => toggleExpand(e, item.symbol)}
                             title="Expand structured diff details"
                           >
-                            {isExpanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
+                            {isExpanded ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
                           </button>
                           <button
                             type="button"
                             className="btn-icon btn-icon-delete"
-                            onClick={() => onRemoveSymbol(item.symbol)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onRemoveSymbol(item.symbol);
+                            }}
                             disabled={isRemoving === item.symbol}
                             title={`Remove ${item.symbol} from watchlist`}
                           >
-                            <Trash2 size={14} />
+                            <Trash2 size={13} />
                           </button>
                         </div>
                       </td>
@@ -332,7 +354,7 @@ export const WatchlistTable: React.FC<WatchlistTableProps> = ({
                             {item.newCatalysts.length > 0 && (
                               <div className="catalysts-section">
                                 <div className="catalysts-header">
-                                  <Zap size={13} />
+                                  <Zap size={12} />
                                   <span>Catalysts Occurring Between Snapshots:</span>
                                 </div>
                                 <div className="catalyst-items-grid">

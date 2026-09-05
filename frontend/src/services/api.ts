@@ -2,30 +2,92 @@ import {
   WatchlistDiffReport,
   TickerState,
   SearchResult,
+  UserWatchlist,
 } from '../types';
 
 const API_BASE = '/api';
 
-export async function fetchWatchlist(userId = 'default_user'): Promise<{
+export async function fetchAllWatchlists(userId = 'default_user'): Promise<{
   userId: string;
+  watchlists: UserWatchlist[];
+}> {
+  const res = await fetch(`${API_BASE}/watchlist/all?userId=${encodeURIComponent(userId)}`);
+  if (!res.ok) throw new Error('Failed to fetch watchlists');
+  return res.json();
+}
+
+export async function fetchWatchlist(userId = 'default_user', watchlistId?: string): Promise<{
+  userId: string;
+  watchlist?: UserWatchlist;
   symbols: string[];
   tickers: Record<string, TickerState>;
   updatedAt: number;
 }> {
-  const res = await fetch(`${API_BASE}/watchlist?userId=${encodeURIComponent(userId)}`);
+  const params = new URLSearchParams({ userId });
+  if (watchlistId) params.append('watchlistId', watchlistId);
+  const res = await fetch(`${API_BASE}/watchlist?${params.toString()}`);
   if (!res.ok) throw new Error('Failed to fetch watchlist');
   return res.json();
 }
 
-export async function addWatchlistSymbol(symbol: string, userId = 'default_user'): Promise<{
+export async function createWatchlist(name: string, symbols?: string[], userId = 'default_user'): Promise<{
+  message: string;
+  watchlist: UserWatchlist;
+  watchlists: UserWatchlist[];
+}> {
+  const res = await fetch(`${API_BASE}/watchlist/create`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, symbols, userId }),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to create watchlist');
+  }
+  return res.json();
+}
+
+export async function renameWatchlist(watchlistId: string, name: string, userId = 'default_user'): Promise<{
+  message: string;
+  watchlist: UserWatchlist;
+  watchlists: UserWatchlist[];
+}> {
+  const res = await fetch(`${API_BASE}/watchlist/${encodeURIComponent(watchlistId)}/rename`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, userId }),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to rename watchlist');
+  }
+  return res.json();
+}
+
+export async function deleteWatchlist(watchlistId: string, userId = 'default_user'): Promise<{
+  message: string;
+  watchlists: UserWatchlist[];
+}> {
+  const res = await fetch(`${API_BASE}/watchlist/${encodeURIComponent(watchlistId)}?userId=${encodeURIComponent(userId)}`, {
+    method: 'DELETE',
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || 'Failed to delete watchlist');
+  }
+  return res.json();
+}
+
+export async function addWatchlistSymbol(symbol: string, userId = 'default_user', watchlistId?: string): Promise<{
   userId: string;
+  watchlist?: UserWatchlist;
   symbols: string[];
   tickers: Record<string, TickerState>;
 }> {
-  const res = await fetch(`${API_BASE}/watchlist`, {
+  const res = await fetch(`${API_BASE}/watchlist/symbols/add`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ symbol, userId }),
+    body: JSON.stringify({ symbol, userId, watchlistId }),
   });
   if (!res.ok) {
     const err = await res.json();
@@ -34,40 +96,76 @@ export async function addWatchlistSymbol(symbol: string, userId = 'default_user'
   return res.json();
 }
 
-export async function removeWatchlistSymbol(symbol: string, userId = 'default_user'): Promise<{
+export async function removeWatchlistSymbol(symbol: string, userId = 'default_user', watchlistId?: string): Promise<{
   userId: string;
+  watchlist?: UserWatchlist;
   symbols: string[];
   tickers: Record<string, TickerState>;
 }> {
-  const res = await fetch(`${API_BASE}/watchlist/${symbol}?userId=${encodeURIComponent(userId)}`, {
-    method: 'DELETE',
+  const res = await fetch(`${API_BASE}/watchlist/symbols/remove`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ symbol, userId, watchlistId }),
   });
   if (!res.ok) throw new Error('Failed to remove symbol');
   return res.json();
 }
 
-export async function fetchLastSeenDiff(userId = 'default_user'): Promise<WatchlistDiffReport> {
-  const res = await fetch(`${API_BASE}/diff/last-seen?userId=${encodeURIComponent(userId)}`);
+export async function fetchLastSeenDiff(userId = 'default_user', watchlistId?: string): Promise<WatchlistDiffReport> {
+  const params = new URLSearchParams({ userId });
+  if (watchlistId) params.append('watchlistId', watchlistId);
+  const res = await fetch(`${API_BASE}/diff/last-seen?${params.toString()}`);
   if (!res.ok) throw new Error('Failed to compute diff report');
   return res.json();
 }
 
-export async function fetchCompareDiff(baseId: string, userId = 'default_user'): Promise<WatchlistDiffReport> {
-  const res = await fetch(`${API_BASE}/diff/compare?baseId=${encodeURIComponent(baseId)}&userId=${encodeURIComponent(userId)}`);
+export async function fetchCompareDiff(baseId: string, userId = 'default_user', watchlistId?: string): Promise<WatchlistDiffReport> {
+  const params = new URLSearchParams({ baseId, userId });
+  if (watchlistId) params.append('watchlistId', watchlistId);
+  const res = await fetch(`${API_BASE}/diff/compare?${params.toString()}`);
   if (!res.ok) throw new Error('Failed to compute comparison diff report');
   return res.json();
 }
 
-export async function acknowledgeDiff(userId = 'default_user'): Promise<{
+export async function acknowledgeDiff(userId = 'default_user', watchlistId?: string): Promise<{
   message: string;
   report: WatchlistDiffReport;
 }> {
   const res = await fetch(`${API_BASE}/diff/acknowledge`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ userId }),
+    body: JSON.stringify({ userId, watchlistId }),
   });
   if (!res.ok) throw new Error('Failed to commit/acknowledge snapshot');
+  return res.json();
+}
+
+export async function fetchSnapshots(userId = 'default_user', watchlistId?: string): Promise<{
+  snapshots: Array<{
+    id: string;
+    userId: string;
+    watchlistId?: string;
+    name: string;
+    timestamp: number;
+    baselineType: string;
+    isSyntheticColdStart?: boolean;
+    tickerCount: number;
+  }>;
+}> {
+  const params = new URLSearchParams({ userId });
+  if (watchlistId) params.append('watchlistId', watchlistId);
+  const res = await fetch(`${API_BASE}/snapshots?${params.toString()}`);
+  if (!res.ok) throw new Error('Failed to fetch snapshots');
+  return res.json();
+}
+
+export async function commitSnapshot(name: string, userId = 'default_user', watchlistId?: string): Promise<any> {
+  const res = await fetch(`${API_BASE}/snapshots/commit`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, userId, watchlistId }),
+  });
+  if (!res.ok) throw new Error('Failed to commit checkpoint');
   return res.json();
 }
 

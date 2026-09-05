@@ -4,7 +4,7 @@ import { fetchLastSeenDiff, fetchCompareDiff, acknowledgeDiff } from '../service
 
 export type DiffBaselineOption = 'LAST_SEEN' | 'TODAY_OPEN' | 'PREVIOUS_CLOSE';
 
-export function useDiffReport(userId: string, refreshIntervalMs = 4000) {
+export function useDiffReport(userId: string, watchlistId?: string, refreshIntervalMs = 4000) {
   const [selectedBaseline, setSelectedBaseline] = useState<DiffBaselineOption>('LAST_SEEN');
   const [report, setReport] = useState<WatchlistDiffReport | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,9 +20,9 @@ export function useDiffReport(userId: string, refreshIntervalMs = 4000) {
 
       let data: WatchlistDiffReport;
       if (selectedBaseline === 'LAST_SEEN') {
-        data = await fetchLastSeenDiff(userId);
+        data = await fetchLastSeenDiff(userId, watchlistId);
       } else {
-        data = await fetchCompareDiff(selectedBaseline, userId);
+        data = await fetchCompareDiff(selectedBaseline, userId, watchlistId);
       }
 
       setReport(data);
@@ -32,9 +32,9 @@ export function useDiffReport(userId: string, refreshIntervalMs = 4000) {
     } finally {
       if (showLoading) setIsLoading(false);
     }
-  }, [userId, selectedBaseline]);
+  }, [userId, watchlistId, selectedBaseline]);
 
-  // Initial load when userId or selectedBaseline changes
+  // Initial load when userId, watchlistId or selectedBaseline changes
   useEffect(() => {
     loadDiff(true);
   }, [loadDiff]);
@@ -52,7 +52,7 @@ export function useDiffReport(userId: string, refreshIntervalMs = 4000) {
     if (!userId) return;
     try {
       setIsAcknowledging(true);
-      const result = await acknowledgeDiff(userId);
+      const result = await acknowledgeDiff(userId, watchlistId);
       setReport(result.report);
       setSelectedBaseline('LAST_SEEN');
       setLastUpdated(Date.now());

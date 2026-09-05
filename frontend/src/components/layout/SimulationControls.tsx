@@ -48,23 +48,23 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({ onRefres
         <button
           type="button"
           className="btn-sim btn-sim-warning"
-          onClick={() => handleAction('stale', () => simulateStaleness('TSLA', 28))}
+          onClick={() => handleAction('stale', () => simulateStaleness('INFY', 28))}
           disabled={isRunning !== null}
-          title="Make TSLA 28m stale to demo visual degradation, tilde notation & dashed sparkline"
+          title="Make INFY 28m stale to demo visual degradation, tilde notation & dashed sparkline"
         >
           <Clock size={12} className={isRunning === 'stale' ? 'spin' : ''} />
-          <span>Test Stale Degradation (TSLA)</span>
+          <span>Test Stale Degradation (INFY)</span>
         </button>
 
         <button
           type="button"
           className="btn-sim btn-sim-danger"
-          onClick={() => handleAction('diverge', () => simulateDivergence('NVDA', 1.45))}
+          onClick={() => handleAction('diverge', () => simulateDivergence('RELIANCE', 1.45))}
           disabled={isRunning !== null}
-          title="Simulate 1.45% feed spread between exchanges on NVDA to trigger divergence alert"
+          title="Simulate 1.45% feed spread between NSE & BSE on RELIANCE to trigger divergence alert"
         >
           <AlertTriangle size={12} className={isRunning === 'diverge' ? 'spin' : ''} />
-          <span>Test Feed Divergence (NVDA)</span>
+          <span>Test Feed Divergence (RELIANCE)</span>
         </button>
 
         <button
@@ -72,8 +72,8 @@ export const SimulationControls: React.FC<SimulationControlsProps> = ({ onRefres
           className="btn-sim btn-sim-reset"
           onClick={() =>
             handleAction('reset', async () => {
-              await resetSimulation('TSLA');
-              await resetSimulation('NVDA');
+              await resetSimulation('INFY');
+              await resetSimulation('RELIANCE');
             })
           }
           disabled={isRunning !== null}
