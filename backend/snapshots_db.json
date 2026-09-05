@@ -2329,6 +2329,157 @@
         }
       },
       "isSyntheticColdStart": false
+    },
+    {
+      "id": "snap-1788581998182-pzl6m",
+      "userId": "test_multi_user_1788581998168",
+      "watchlistId": "wl-tech-test_multi_user_1788581998168",
+      "name": "Tech Checkpoint Alpha",
+      "timestamp": 1788581998182,
+      "baselineType": "USER_COMMIT",
+      "tickers": {
+        "TCS": {
+          "symbol": "TCS",
+          "name": "Tata Consultancy Services Ltd",
+          "price": 4218.48,
+          "open": 4150,
+          "high": 4281.777499999999,
+          "low": 4100.2,
+          "volume": 1599523,
+          "avgVolume": 2450000,
+          "peRatio": 31.4,
+          "marketCap": 15250000000000,
+          "rsi14": 56.9,
+          "macd": {
+            "value": 5.48,
+            "signal": 4.11,
+            "histogram": 1.37
+          },
+          "sparkline": [
+            4153.02,
+            4160.71,
+            4170.84,
+            4169.87,
+            4178.31,
+            4191.46,
+            4191.16,
+            4197.67,
+            4202.76,
+            4205.16,
+            4214.68,
+            4213.8,
+            4210.91,
+            4219.39,
+            4216.43,
+            4222.33,
+            4217.05,
+            4220.37,
+            4218.35,
+            4218.5,
+            4218.48
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-tcs-1",
+              "symbol": "TCS",
+              "timestamp": 1788581030027,
+              "headline": "TCS Bags $1.2B Mega Cloud Modernization Deal from Leading European Banking Group",
+              "source": "CNBC-TV18",
+              "impact": "BULLISH",
+              "summary": "Multi-year engagement to deploy hybrid cloud, AI copilots, and core banking infrastructure transformation across 12 countries.",
+              "category": "PRODUCT"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 56,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0.056,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788581998126,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        },
+        "INFY": {
+          "symbol": "INFY",
+          "name": "Infosys Limited",
+          "price": 1942.81,
+          "open": 1885,
+          "high": 1971.9419999999998,
+          "low": 1862.3799999999999,
+          "volume": 3772898,
+          "avgVolume": 5800000,
+          "peRatio": 28.2,
+          "marketCap": 8060000000000,
+          "rsi14": 62.9,
+          "macd": {
+            "value": 4.62,
+            "signal": 3.47,
+            "histogram": 1.16
+          },
+          "sparkline": [
+            1882.91,
+            1887.58,
+            1895.69,
+            1901.62,
+            1902.53,
+            1899.51,
+            1904.37,
+            1902.79,
+            1911.3,
+            1908.24,
+            1909.34,
+            1918.09,
+            1924.21,
+            1928.66,
+            1936.27,
+            1944.7,
+            1948.52,
+            1946.75,
+            1947.68,
+            1942.8,
+            1942.81
+          ],
+          "activeCatalysts": [
+            {
+              "id": "cat-infy-1",
+              "symbol": "INFY",
+              "timestamp": 1788580310027,
+              "headline": "Infosys Raises FY26 Constant Currency Revenue Growth Guidance to 4.5% - 5.0%",
+              "source": "Moneycontrol",
+              "impact": "BULLISH",
+              "summary": "Strong digital AI deals and Topaz generative AI suite expansion drove quarterly large deal TCV of $3.2 billion.",
+              "category": "EARNINGS"
+            },
+            {
+              "id": "cat-infy-2",
+              "symbol": "INFY",
+              "timestamp": 1788567590027,
+              "headline": "Nomura Upgrades Infosys to Buy with Price Target of ₹2,150 on Margin Recovery",
+              "source": "The Economic Times",
+              "impact": "BULLISH",
+              "summary": "Brokerage highlights accelerating BFSI discretionary IT spend and operational efficiency gains.",
+              "category": "ANALYST"
+            }
+          ],
+          "freshness": "REALTIME",
+          "dataAgeMs": 56,
+          "confidence": {
+            "level": "HIGH",
+            "isDivergent": false,
+            "divergencePercent": 0.042,
+            "primaryProvider": "Deterministic Synthetic Sim",
+            "secondaryProvider": "BSE Parallel Sim",
+            "asOf": 1788581998126,
+            "dataSourceReason": "SYNTHETIC_MODE",
+            "isLiveData": false
+          }
+        }
+      },
+      "isSyntheticColdStart": false
     }
   ],
   "userLastSeen": {
@@ -2339,6 +2490,7 @@
     "test_multi_user_1788579181238:wl-tech-test_multi_user_1788579181238": "snap-1788579181245-wlc9c",
     "test_multi_user_1788579631409:wl-tech-test_multi_user_1788579631409": "snap-1788579631415-rvwal",
     "test_multi_user_1788579713309:wl-tech-test_multi_user_1788579713309": "snap-1788579713314-54twt",
-    "test_multi_user_1788580264245:wl-tech-test_multi_user_1788580264245": "snap-1788580264252-sbwql"
+    "test_multi_user_1788580264245:wl-tech-test_multi_user_1788580264245": "snap-1788580264252-sbwql",
+    "test_multi_user_1788581998168:wl-tech-test_multi_user_1788581998168": "snap-1788581998182-pzl6m"
   }
 }

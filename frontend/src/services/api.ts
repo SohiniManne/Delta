@@ -4,8 +4,17 @@ import {
   SearchResult,
   UserWatchlist,
 } from '../types';
+// Resolve backend API URL from environment variable (Vercel / Production) with local dev fallback
+const getApiBase = (): string => {
+  const envUrl = import.meta.env.VITE_BACKEND_URL;
+  if (!envUrl || typeof envUrl !== 'string' || !envUrl.trim()) {
+    return '/api';
+  }
+  const cleanUrl = envUrl.trim().replace(/\/+$/, '');
+  return cleanUrl.endsWith('/api') ? cleanUrl : `${cleanUrl}/api`;
+};
 
-const API_BASE = '/api';
+const API_BASE = getApiBase();
 
 export async function fetchAllWatchlists(userId = 'default_user'): Promise<{
   userId: string;
