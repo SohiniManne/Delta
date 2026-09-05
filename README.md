@@ -5,39 +5,97 @@ Delta reimagines the modern market watchlist. Instead of bombarding traders with
 
 ---
 
+## 🏛️ System Architecture
+
+```mermaid
+flowchart TB
+    subgraph Client["🖥️ Frontend Trading Terminal (React + Vite + TypeScript)"]
+        direction TB
+        Sidebar["📁 Multi-Watchlist Sidebar<br/>(Portfolio Switcher & CRUD)"]
+        Hero["📊 DiffSummaryHero<br/>(Net Drift, Top Mover, Catalysts)"]
+        TimeTravel["⏱️ TimeTravelBar<br/>(Baseline Switcher & Checkpoints)"]
+        Table["📋 WatchlistTable<br/>(₹ Prices, Deltas, Signals, Tildes ~)"]
+        ExpandedCard["🔍 Expanded Diff Cards<br/>(AI Analyst / Rule-Based Badges)"]
+        TechPanel["📈 TechnicalPanel<br/>(SVG Price Trajectory vs. Baseline)"]
+        ChaosBar["⚡ Simulation Controls<br/>(Ticks, Stale, Divergence, Shocks)"]
+    end
+
+    subgraph API["🌐 REST API Gateway (Express 4)"]
+        direction TB
+        WlRoutes["/api/watchlist/*"]
+        DiffRoutes["/api/diff/*"]
+        SnapRoutes["/api/snapshots/*"]
+        MarketRoutes["/api/market/*"]
+    end
+
+    subgraph Services["⚙️ Backend Core Services & Engines"]
+        direction TB
+        WlService["WatchlistService<br/>• User & Watchlist Isolation<br/>• CRUD & Multi-Portfolio"]
+        SnapService["SnapshotService<br/>• 09:15 AM Market Open Baseline<br/>• 03:30 PM Prev Close Fallback<br/>• User Commit Checkpoints"]
+        DiffEngine["DiffEngine<br/>• Quantitative Delta Math (Δ Price, Δ %)<br/>• Volume Surge & RSI/MACD Shifts<br/>• 0–100 Priority Scoring & Severity"]
+        MarketService["MarketDataService<br/>• Synthetic Random Walk Feed<br/>• Freshness Auditing (Realtime / Stale)<br/>• Feed Divergence Detection (NSE vs BSE)<br/>• Breaking Catalysts Pipeline"]
+        AiService["AiNarratorService<br/>• Google Gemini API Integration<br/>• 3-Second Timeout Guard<br/>• Strict Zero-Hallucination Envelope<br/>• Silent Rule-Based Fallback"]
+    end
+
+    subgraph External["🤖 AI Model & Persistence Layer"]
+        Gemini["Google Gemini API<br/>(gemini-2.5-flash)"]
+        DB[("💾 Local JSON Persistence<br/>• watchlists_db.json<br/>• snapshots_db.json")]
+        MockData["📊 Mock Indian Feeds & Catalysts<br/>• NSE/BSE Tickers (RELIANCE, TCS, INFY)<br/>• Indian News (Moneycontrol, ET, Mint)"]
+    end
+
+    %% Frontend to API
+    Client <-->|HTTP / Polling Feeds| API
+
+    %% API to Services
+    WlRoutes --> WlService
+    DiffRoutes --> DiffEngine
+    SnapRoutes --> SnapService
+    MarketRoutes --> MarketService
+
+    %% Service Connections
+    DiffEngine <--> SnapService
+    DiffEngine <--> MarketService
+    DiffEngine --> AiService
+    AiService -->|Async Synthesis (3s Limit)| Gemini
+    WlService <--> DB
+    SnapService <--> DB
+    MarketService <--> MockData
+```
+
+---
+
 ## 🌟 Key Architecture & Features
 
 1. **Versioned Snapshot & Structured Diff Engine**:
-   - Computes $State(t_{\text{now}}) - State(t_{\text{base}})$.
-   - Quantifies price/percent deltas, volume surge multiples ($>1.5\times$), 14-period RSI boundary shifts (entering Overbought $\ge 70$ or Oversold $\le 30$), and MACD histogram crossovers.
+   - Computes $\text{State}(t_{\text{now}}) - \text{State}(t_{\text{base}})$.
+   - Quantifies exact price shifts in **₹ INR**, volume surge multiples ($>1.5\times$), 14-period RSI boundary shifts (entering Overbought $\ge 70$ or Oversold $\le 30$), and MACD histogram crossovers.
    - Computes a dynamic 0–100 **Attention Priority Score** and severity classification (`CRITICAL`, `MODERATE`, `LOW`, `UNCHANGED`).
 
-2. **First-Class Cold-Start Fallback**:
-   - If a new user visits with no prior session history, Delta gracefully generates a synthetic baseline against **Today's Market Open (09:30 AM)** or pre-market **Previous Day Close (04:00 PM)** without throwing errors.
+2. **First-Class Cold-Start Fallback (Indian Market Hours)**:
+   - If a user visits with no prior session history, Delta generates a synthetic baseline against **Today's Market Open (09:15 AM IST)** or pre-market **Previous Day Close (03:30 PM IST)** without throwing errors.
 
 3. **Data Quality & Degraded Visual Precision**:
    - Multi-tier freshness auditing: `REALTIME` ($<30\text{s}$), `DELAYED` ($30\text{s}-15\text{m}$), `STALE` ($>15\text{m}$).
    - Cross-exchange feed discrepancy detection (e.g. primary exchange vs. fallback feed diverging $>0.30\%$).
-   - **No fake precision**: Degraded feeds visibly reflect uncertainty via approximation tildes (`~$212.4`), muted amber styling, dashed SVG sparklines (`strokeDasharray="3 3"`), and hoverable audit popovers.
+   - **No fake precision**: Degraded feeds visibly reflect uncertainty via approximation tildes (`~₹2,136.47`), muted amber styling, dashed SVG sparklines (`strokeDasharray="3 3"`), and hoverable audit popovers.
 
-4. **Time Travel Baseline Switcher (`TimeTravelBar`)**:
-   - Seamlessly toggle the comparison baseline on the fly between:
-     - **Last Visit / Checkpoint** (`LAST_SEEN`)
-     - **Today's Market Open** (09:30 AM, `TODAY_OPEN`)
-     - **Yesterday's Market Close** (04:00 PM, `PREVIOUS_CLOSE`)
-   - Recomputes structured diffs instantly via `/api/diff/compare`.
+4. **Multi-Portfolio Sidebar & Isolation**:
+   - Users can create, switch between, and manage multiple named watchlists (`Tech Momentum`, `Global Macro & Large Cap`, `Digital Assets & Crypto`).
+   - Every watchlist maintains its own isolated snapshot history and baseline commits.
 
 5. **AI Diff Narrator (Google Gemini API)**:
-   - Generates concise 1–2 sentence Wall Street analyst syntheses tailored to the structured diff payload.
+   - Generates concise 1–2 sentence Wall Street / Dalal Street analyst syntheses tailored strictly to structured diff metrics and Indian catalysts.
    - **Strict Zero-Hallucination Envelope**: Passes strictly the quantified diff metrics and verified catalysts—never hallucinating external data.
-   - **3-Second Timeout & Silent Fallback**: Enforces a strict 3,000ms timeout with silent, seamless fallback to the deterministic rule-based template. The UI never encounters a blank or error state.
+   - **3-Second Timeout & Silent Fallback**: Enforces a strict 3,000ms timeout with silent, seamless fallback to deterministic rule-based templates. The UI never encounters a blank or error state.
    - Includes visual `✨ AI Analyst` / `📋 Rule-Based` tags and an interactive comparison mode.
 
-6. **Multi-Trader Profiles & Local Persistence**:
-   - Built-in trader profiles (`alice_quant`, `bob_macro`, `crypto_whale`, or custom ID) with persistent snapshot histories saved across sessions.
+6. **Interactive SVG Price Trajectory Chart**:
+   - Live visual plotting of price trajectory curves against dashed baseline references with theme gradient fills, live tick indicator glow dots, and INR scale bounds.
 
-7. **Interactive Chaos & Simulation Toolbar**:
-   - One-click buttons to simulate market micro-ticks, inject catalyst events, trigger stale data degradation on TSLA, or test cross-feed divergence on NVDA.
+7. **Indian Equities & INR Currency (`₹`)**:
+   - Pre-configured with major Indian equities across NSE/BSE (`TCS`, `INFY`, `WIPRO`, `RELIANCE`, `HDFCBANK`, `ICICIBANK`, `ITC`, `SBIN`) and digital assets in INR.
+   - Indian number formatting with Lakhs and Crores (`₹1,23,456.78`, `₹20.62 L Cr`).
+
 
 ---
 
@@ -113,7 +171,7 @@ npm run dev
 
 ## 🧪 Running Automated Tests
 
-Delta includes an extensive suite of 38 unit and integration tests covering cold-start fallback branches, feed divergence detection, staleness degradation, structured diff math, and AI narrator fallback resilience.
+Delta includes an extensive suite of **59 unit and integration tests** covering cold-start fallback branches (09:15 AM Open / 03:30 PM Close), feed divergence detection, staleness degradation, structured diff math in INR, AI narrator fallback resilience, and multi-watchlist CRUD with cross-portfolio isolation.
 
 To run the test suite:
 ```bash
@@ -141,22 +199,24 @@ npm test
 To experience the full functionality of Delta during evaluation:
 
 1. **Cold-Start Experience**:
-   - Open [http://localhost:5173](http://localhost:5173). Notice the purple **Cold-Start Active** hero banner establishing a synthetic baseline from **Today's Market Open (09:30 AM)**.
+   - Open [http://localhost:5173](http://localhost:5173). Notice the purple **Cold-Start Active** hero banner establishing a synthetic baseline from **Today's Market Open (09:15 AM IST)** or **Previous Day Close (03:30 PM IST)**.
 2. **Commit Checkpoint**:
-   - Click **"Commit Checkpoint"** in the top right of the hero banner. Notice all price deltas reset to zero ($0.00$), establishing your new baseline snapshot.
+   - Click **"Save Baseline Checkpoint"** in the hero banner. Notice all price deltas reset to zero (₹0.00), establishing your new baseline snapshot.
 3. **Simulate Market Micro-Ticks**:
-   - Click **"Simulate Tick"** in the top simulation bar. Watch prices shift, sparklines update, and technical indicator chips (e.g. RSI) dynamically react.
-4. **Test Stale Degradation (TSLA)**:
-   - Click **"Test Stale Degradation (TSLA)"**.
-   - Observe the TSLA row degrade: price becomes `~$212.4` in amber italics, % delta pill displays dashed styling, the sparkline turns into a dashed slate curve, and the status chip displays `⏱ Stale (28m ago)`.
-5. **Test Feed Divergence (NVDA)**:
-   - Click **"Test Feed Divergence (NVDA)"**.
-   - Observe the `⚠️ Feeds Diverge ±1.45%` badge appear on NVDA. Hover or click on the badge to inspect the cross-exchange audit popover.
+   - Click **"Simulate Tick"** in the top simulation bar. Watch prices shift in ₹, sparklines animate, and technical indicator chips (RSI / MACD) dynamically react.
+4. **Test Stale Degradation (INFY)**:
+   - Click **"Test Stale Degradation (INFY)"**.
+   - Observe the INFY row degrade: price displays `~₹2,136.47 ~ stale` in amber italics, % delta pill displays dashed styling, the sparkline turns into a dashed slate curve, and the status chip displays `⏱ Stale (29m ago)`.
+5. **Test Feed Divergence (RELIANCE)**:
+   - Click **"Test Feed Divergence (RELIANCE)"**.
+   - Observe the `⚠️ Feeds Diverge ±1.45%` badge appear on RELIANCE. Hover or click on the badge to inspect the cross-exchange audit popover.
 6. **AI Diff Narrator & Comparison**:
-   - Click any stock row (e.g. NVDA or TSLA) to expand its structured diff breakdown.
-   - View the synthesized **Structured Diff Synthesis** narrative. Click **"Compare AI vs Rule-Based"** to see how the LLM synthesizes complex indicators into institutional commentary compared to the deterministic template.
-7. **Switch Trader Profile**:
-   - Click the profile button in the top right (e.g. `Alice (Quantitative Trader)`) and switch to `Bob (Global Macro)` or `Charlie (Digital Assets)` to see independent persisted watchlist state.
+   - Click any stock row (e.g. INFY or RELIANCE) to expand its structured diff breakdown.
+   - View the synthesized **AI Analyst** narrative. Click **"Compare AI vs Rule-Based"** to see how the LLM synthesizes complex indicators and Indian catalysts into institutional commentary compared to the deterministic template.
+7. **Multi-Portfolio Watchlist Sidebar**:
+   - Use the persistent left sidebar to switch between `Tech Momentum`, `Global Macro & Large Cap`, and `Digital Assets & Crypto`, or click **+ New** to create and name a custom portfolio.
+8. **Interactive Price Trajectory vs Baseline Chart**:
+   - Inspect the right-side technical drawer to view dynamic SVG price trajectories plotted against dashed baseline references with emerald/rose area gradients and ₹ INR scale bounds.
 
 ---
 
@@ -175,15 +235,15 @@ Delta/
 │       ├── config.ts          # Server, freshness thresholds, and Gemini settings
 │       ├── server.ts          # Express entrypoint with CORS & routes
 │       ├── types/             # TickerState, WatchlistSnapshot, TickerDiff, DataSourceConfidence
-│       ├── data/              # Mock tickers, definitions, and catalysts
+│       ├── data/              # Mock Indian equities (NSE/BSE) & Indian catalysts (Moneycontrol/ET)
 │       ├── services/
 │       │   ├── marketDataService.ts   # In-memory synthetic feed with 4s random-walk
 │       │   ├── snapshotService.ts     # Checkpoints, persistence & cold-start baselines
 │       │   ├── diffEngine.ts          # Quantitative math, priority scoring & takeaway logic
 │       │   ├── aiNarratorService.ts   # Gemini API integration with 3s timeout & fallback
-│       │   └── watchlistService.ts    # User watchlist CRUD & symbol state
+│       │   └── watchlistService.ts    # Multi-watchlist CRUD & user isolation
 │       ├── routes/            # REST API route handlers
-│       └── tests/             # Comprehensive 38-test unit suite
+│       └── tests/             # Comprehensive 59-test unit suite
 └── frontend/
     ├── .env.example           # Frontend environment template
     ├── package.json           # React 18, Vite, Lucide icons dependencies
@@ -193,10 +253,13 @@ Delta/
         ├── index.css          # Dark-mode financial terminal design system tokens
         ├── App.tsx            # Main application container
         ├── types/             # Frontend TypeScript models
+        ├── utils/
+        │   └── formatters.ts  # Indian currency (₹) & number formatting (Lakhs/Crores)
         ├── services/api.ts    # Typed API client
         ├── hooks/             # Reactive polling hooks (useWatchlist, useDiffReport)
         └── components/
-            ├── layout/        # Header, Identity Switcher Modal, Simulation Controls
+            ├── layout/        # Header, Sidebar, Simulation Controls
+            ├── charts/        # TechnicalPanel (SVG Price Trajectory vs. Baseline)
             ├── diff/          # DiffSummaryHero, FreshnessIndicator, Confidence Popover
             ├── watchlist/     # WatchlistTable, AddStockModal, Sparkline
             └── common/        # Reusable UI components
