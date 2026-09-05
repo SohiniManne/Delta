@@ -11,13 +11,13 @@ Delta reimagines the modern market watchlist. Instead of bombarding traders with
 flowchart TB
     subgraph Client["🖥️ Frontend Trading Terminal (React + Vite + TypeScript)"]
         direction TB
-        Sidebar["📁 Multi-Watchlist Sidebar<br/>(Portfolio Switcher & CRUD)"]
-        Hero["📊 DiffSummaryHero<br/>(Net Drift, Top Mover, Catalysts)"]
-        TimeTravel["⏱️ TimeTravelBar<br/>(Baseline Switcher & Checkpoints)"]
-        Table["📋 WatchlistTable<br/>(₹ Prices, Deltas, Signals, Tildes ~)"]
-        ExpandedCard["🔍 Expanded Diff Cards<br/>(AI Analyst / Rule-Based Badges)"]
-        TechPanel["📈 TechnicalPanel<br/>(SVG Price Trajectory vs. Baseline)"]
-        ChaosBar["⚡ Simulation Controls<br/>(Ticks, Stale, Divergence, Shocks)"]
+        Sidebar["📁 Multi-Watchlist Sidebar<br/>Portfolio Switcher & CRUD"]
+        Hero["📊 DiffSummaryHero<br/>Net Drift, Top Mover, Catalysts"]
+        TimeTravel["⏱️ TimeTravelBar<br/>Baseline Switcher & Checkpoints"]
+        Table["📋 WatchlistTable<br/>INR Prices, Deltas, Signals, Quality Tildes"]
+        ExpandedCard["🔍 Expanded Diff Cards<br/>AI Analyst & Rule-Based Badges"]
+        TechPanel["📈 TechnicalPanel<br/>SVG Price Trajectory vs Baseline"]
+        ChaosBar["⚡ Simulation Controls<br/>Ticks, Stale, Divergence, Shocks"]
     end
 
     subgraph API["🌐 REST API Gateway (Express 4)"]
@@ -30,9 +30,9 @@ flowchart TB
 
     subgraph Services["⚙️ Backend Core Services & Engines"]
         direction TB
-        WlService["WatchlistService<br/>• User & Watchlist Isolation<br/>• CRUD & Multi-Portfolio"]
-        SnapService["SnapshotService<br/>• 09:15 AM Market Open Baseline<br/>• 03:30 PM Prev Close Fallback<br/>• User Commit Checkpoints"]
-        DiffEngine["DiffEngine<br/>• Quantitative Delta Math (Δ Price, Δ %)<br/>• Volume Surge & RSI/MACD Shifts<br/>• 0–100 Priority Scoring & Severity"]
+        WlService["WatchlistService<br/>• User & Watchlist Isolation<br/>• Multi-Portfolio CRUD"]
+        SnapService["SnapshotService<br/>• 09:15 AM Market Open Baseline<br/>• 03:30 PM Prev Close Fallback<br/>• User Checkpoint Commits"]
+        DiffEngine["DiffEngine<br/>• Quantitative Delta Math<br/>• Volume Surge & RSI/MACD Shifts<br/>• 0-100 Priority Score & Severity"]
         MarketService["MarketDataService<br/>• Synthetic Random Walk Feed<br/>• Freshness Auditing (Realtime / Stale)<br/>• Feed Divergence Detection (NSE vs BSE)<br/>• Breaking Catalysts Pipeline"]
         AiService["AiNarratorService<br/>• Google Gemini API Integration<br/>• 3-Second Timeout Guard<br/>• Strict Zero-Hallucination Envelope<br/>• Silent Rule-Based Fallback"]
     end
@@ -44,7 +44,7 @@ flowchart TB
     end
 
     %% Frontend to API
-    Client <-->|HTTP / Polling Feeds| API
+    Client <-->|"HTTP / Polling Feeds"| API
 
     %% API to Services
     WlRoutes --> WlService
@@ -56,7 +56,7 @@ flowchart TB
     DiffEngine <--> SnapService
     DiffEngine <--> MarketService
     DiffEngine --> AiService
-    AiService -->|Async Synthesis (3s Limit)| Gemini
+    AiService -->|"Async Synthesis (3s Limit)"| Gemini
     WlService <--> DB
     SnapService <--> DB
     MarketService <--> MockData
